@@ -1,0 +1,92 @@
+<div class="ui container mat-elevation-z4">
+    <div class="ui top attached inverted teal segment" style="border:none;">
+        <h2 class="ui header">
+            <i class="phone icon"></i>
+            <div class="content">
+                مشخصات مقاطع تحصیلی
+                <div class="sub header">تعریف مشخصات مقاطع تحصیلی، ویرایش اطلاعات و سایر موارد</div>
+            </div>
+        </h2>
+    </div>
+    <div class="ui attached segment">
+        <div class="ui container" style="overflow:hidden;">
+            <form novalidate [formGroup]="dataForm">
+                <div class="ui stackable grid container" style="padding-top:10px;">
+                    <div class="row" style="padding-bottom:5px;">
+                        <div class="eight wide column">
+                            <div class="row" style="padding-bottom:5px;">
+                                <div class="wide column">
+                                    <mat-form-field style="width:150px;">
+                                        <input matInput formControlName="study_code" autocomplete="off" placeholder="کد مقطع تحصیلی" style="text-align:center;" maxlength="3"
+                                            required>
+                                        <mat-error align="right" *ngIf="dataForm.get('study_code').invalid">{{getErrorMessage(dataForm.get('study_code'))}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:0px;padding-bottom:5px;">
+                                <div class="wide column">
+                                    <mat-form-field style="width:300px;">
+                                        <input matInput formControlName="study_name" autocomplete="off" placeholder="نام مقطع تحصیلی" style="text-align:right;" required>
+                                        <mat-error align="right" *ngIf="dataForm.get('study_name').invalid">{{getErrorMessage(dataForm.get('study_name'))}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="eight wide column">
+                            <div class="mat-elevation-z4">
+                                <div class="filter-header">
+                                    <mat-form-field style="width:100%;">
+                                        <input #inputFilter matInput (keyup)="applyFilter($event.target.value)" placeholder="جستجو" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <mat-table #datagrid [dataSource]="dataSource" matSort>
+                                    <ng-container matColumnDef="select">
+                                        <mat-header-cell *matHeaderCellDef class="col-select"> </mat-header-cell>
+                                        <mat-cell class="col-select" *matCellDef="let row">
+                                            <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                                            </mat-checkbox>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="study_code">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> کد مقطع تحصیلی </mat-header-cell>
+                                        <mat-cell class="col-study-code" *matCellDef="let element"> {{element.study_code}} </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="study_name">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> نام مقطع تحصیلی </mat-header-cell>
+                                        <mat-cell class="col-study-name" *matCellDef="let element"> {{element.study_name}} </mat-cell>
+                                    </ng-container>
+
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'row-select': selectedRowIndex == row.study_code}"
+                                        (click)="selectRow(row)"></mat-row>
+                                </mat-table>
+                                <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:0px;padding-bottom:0px;">
+                        <div class="wide column">
+                            <div class="ui divider"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:0px;">
+                        <div class="wide left aligned column">
+                            <a class="ui teal tag label">{{date_message}}</a>
+                            <button mat-raised-button ripple color="accent" *ngIf="state_save" [disabled]="!dataForm.valid" (click)="save(dataForm.value)"
+                                type="button">ذخیره اطلاعات</button>
+                            <button mat-raised-button ripple color="primary" *ngIf="!state_save" [disabled]="!dataForm.valid" (click)="update(dataForm.value)"
+                                type="button">ویرایش اطلاعات</button>
+                            <button mat-icon-button ripple color="primary" type="reset" (click)="resetForm()" title="پاک کردن صفحه">
+                                <i class="fas fa-sync fa-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

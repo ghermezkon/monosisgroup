@@ -1,0 +1,245 @@
+<div class="ui container" style="padding:10px;">
+    <div class="ui grid">
+        <div class="row">
+            <div class="seven wide column">
+                <div class="ui inverted teal segment padded">
+                    <h2 class="ui header">
+                        <i class="phone icon"></i>
+                        <div class="content" style="color:white;">
+                            مشخصات آزمون های طراحی شده
+                            <div class="sub header">لیست آزمون های طرح شده، و ویرایش آنها</div>
+                        </div>
+                    </h2>
+                </div>
+            </div>
+            <div class="nine wide column">
+                <div class="ui secondary teal segment">
+                    <mat-form-field>
+                        <mat-select placeholder="آموزگار" [(value)]="teacher_select">
+                            <mat-option *ngFor="let t of teacher_list" [value]="t.teacher_name">{{t.teacher_name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-raised-button style="background-color:#26A69A;color:white;font-weight:normal" type="button" (click)="search()">جستجو</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top:0px;" *ngIf="show_exam_list">
+            <div class="wide column">
+                <div class="mat-elevation-z4">
+                    <div class="filter-header" style="background-color:white;">
+                        <mat-form-field style="width:100%;">
+                            <input #inputFilter matInput (keyup)="applyFilter($event.target.value)" placeholder="جستجو" autocomplete="off">
+                        </mat-form-field>
+                    </div>
+                    <mat-table #datagrid [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="select">
+                            <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                                </mat-checkbox>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="exam_name">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> نام آزمون </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.exam_name}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="exam_study">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> مقطع تحصیلی </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.exam_study}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="exam_level">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> سطح آزمون </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.exam_level}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="exam_lesson">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> درس </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.exam_lesson}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="last_update_long">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> تاریخ ثبت </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.last_update_long}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="operate">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <button mat-icon-button color="warn" (click)="show_detail(row)">
+                                    <i class="fa fa-edit fa-2x"></i>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="update_admin">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <button mat-icon-button color="primary" (click)="update('admin')">
+                                    <i class="fa fa-user-circle fa-2x"></i>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;" 
+                            [ngClass]="{'row-select': selectedRowIndex == row._id}" (click)="selectRow(row)"></mat-row>
+                    </mat-table>
+                    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top:0px;" *ngIf="show_exam_detail">
+            <div class="wide column" [formGroup]="dataForm">
+                <div class="ui olive center aligned segment">
+                    <div class="row" style="padding-bottom:0px;">
+                        <div class="ui grid">
+                            <div class="four wide column">
+                                <mat-form-field style="width:100%;">
+                                    <input matInput formControlName="exam_name" autocomplete="off" placeholder="عنوان آزمون" style="text-align:right;" required>
+                                    <mat-error align="right" *ngIf="dataForm.get('exam_name').invalid">{{getErrorMessage(dataForm.get('exam_name'))}}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="three wide column">
+                                <mat-form-field class="disabled-input" style="width:100%;">
+                                    <mat-select placeholder="آموزگار" (selectionChange)="teacherChange($event)" formControlName="exam_teacher" required>
+                                        <mat-option *ngFor="let t of teacher_list" [value]="t.teacher_name">{{t.teacher_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="three wide column">
+                                <mat-form-field class="disabled-input" style="width:100%;">
+                                    <mat-select placeholder="مقطع تحصیلی" (selectionChange)="studyChange($event)" formControlName="exam_study" required>
+                                        <mat-option *ngFor="let s of study_list" [value]="s">{{s}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="two wide column">
+                                <mat-form-field style="width:100%;">
+                                    <mat-select placeholder="سطح آزمون" formControlName="exam_level" required>
+                                        <mat-option *ngFor="let l of level_list" [value]="l">{{l}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="three wide column">
+                                <mat-form-field class="disabled-input" style="width:100%;">
+                                    <mat-select placeholder="نام درس" formControlName="exam_lesson" required>
+                                        <mat-option *ngFor="let l of lesson_list" [value]="l.lesson_name">{{l.lesson_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top:0px;">
+            <div class="eight wide column" *ngIf="show_exam_detail">
+                <div class="mat-elevation-z4">
+                    <mat-table #datagridQuestion [dataSource]="dataSource_question">
+                        <ng-container matColumnDef="select">
+                            <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <mat-checkbox (click)="selectRow_question(row)" (change)="$event ? selection_question.toggle(row) : null" [checked]="selection_question.isSelected(row)">
+                                </mat-checkbox>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="question_number">
+                            <mat-header-cell *matHeaderCellDef> شماره سوال </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.question_number + 1}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="question_text">
+                            <mat-header-cell *matHeaderCellDef> عنوان سوال </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.question_text}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="question_grade">
+                            <mat-header-cell *matHeaderCellDef> نمره سوال </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.question_grade}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="question_level">
+                            <mat-header-cell *matHeaderCellDef> سطح سوال </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.question_level}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="open_dialog">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <button mat-icon-button color="warn" (click)="open_dialog(row)">
+                                    <i class="fa fa-eye fa-2x"></i>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns_question"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns_question;" [ngClass]="{'row-select': selectedRowIndex_question == row.question_number}"
+                            (click)="selectRow_question(row)"></mat-row>
+                    </mat-table>
+                    <mat-paginator #paginatorQuestion [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                    </mat-paginator>
+                </div>
+            </div>
+            <div class="eight wide column" *ngIf="show_question_detail">
+                <div class="ui olive center aligned segment">
+                    <div class="ui grid">
+                        <div class="row" style="padding-bottom:0px;">
+                            <div class="wide column">
+                                <mat-form-field style="width:100%;">
+                                    <input matInput [formControl]="azmoon_question" autocomplete="off" placeholder="عنوان سوال" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:0px;">
+                            <div class="five wide column">
+                                <mat-form-field style="width:100%;">
+                                    <mat-select placeholder="سطح سوال" [formControl]="question_level" required>
+                                        <mat-option *ngFor="let q of question_level_list" [value]="q">{{q}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="three wide column">
+                                <mat-form-field style="width:100%;text-align:center;">
+                                    <input matInput style="text-align:center;" [formControl]="question_grade" autocomplete="off" placeholder="نمره سوال" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="four wide column">
+                                <mat-form-field style="width:100%;text-align:center;">
+                                    <input matInput style="text-align:center;" [formControl]="exam_time" autocomplete="off" placeholder="مدت زمان برگزاری" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="four wide column">
+                                <div class="five wide column">
+                                    <mat-form-field style="width:100%;">
+                                        <mat-select placeholder="گزینه صحیح" [formControl]="answer_fine" style="text-align:center;" required>
+                                            <mat-option [value]="None" style="text-align:center !important;"></mat-option>
+                                            <mat-option [value]="1" style="text-align:center !important;">گزینه اول</mat-option>
+                                            <mat-option [value]="2" style="text-align:center !important;">گزینه دوم</mat-option>
+                                            <mat-option [value]="3" style="text-align:center !important;">گزینه سوم</mat-option>
+                                            <mat-option [value]="4" style="text-align:center !important;">گزینه چهارم</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:0px;">
+                            <div class="sixteen wide column">
+                                <mat-form-field style="width:100%;">
+                                    <input matInput autocomplete="off" [formControl]="answer_help" placeholder="راهنمای حل مساله" style="text-align:right;">
+                                    <mat-error align="right"></mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:0px;">
+                            <div class="sixteen wide column">
+                                <button mat-raised-button color="primary" style="width:100%;" *ngIf="!dataForm.get('hasUser').value" type="button" (click)="update_question()">ویرایش سوال</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top:0px;">
+            <div class="sixteen wide column">
+                <button mat-raised-button color="primary" style="width:100%;" type="button" *ngIf="!dataForm.get('hasUser').value" [disabled]="!dataForm.valid || !show_exam_detail"
+                    (click)="update('teacher')">ویرایش اطلاعات توسط آموزگار</button>
+            </div>
+        </div>
+    </div>
+</div>

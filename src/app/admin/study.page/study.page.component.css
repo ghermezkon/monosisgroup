@@ -1,0 +1,10 @@
+:host /deep/ .col-study-code{
+    text-align:center;
+}
+.mat-column-study_code{
+    max-width:30%;
+}
+:host /deep/ .col-study-name{
+    text-align:center;
+    width:70%;
+}

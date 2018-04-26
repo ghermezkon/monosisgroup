@@ -1,0 +1,203 @@
+<div class="ui container mat-elevation-z4">
+    <div class="ui top attached inverted teal segment" style="border:none;">
+        <h2 class="ui header">
+            <i class="phone icon"></i>
+            <div class="content">
+                مشخصات آموزگار
+                <div class="sub header">تعریف مشخصات آموزگار، ویرایش اطلاعات و سایر موارد</div>
+            </div>
+        </h2>
+    </div>
+    <div class="ui attached segment">
+        <div class="ui container" style="overflow:hidden;">
+            <form novalidate [formGroup]="dataForm">
+                <div class="ui grid container" style="padding-top:10px;">
+                    <div class="three wide column">
+                        <div class="row">
+                            <label class="myFile" style="width:100%;"> 
+                                <img class="ui small circular image" [src]="imgSrc">
+                                <input id="fileImport" name="single" type="file" accept="image/*" (change)="readFile($event);" />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="thirteen wide column">
+                        <div class="row" style="padding-bottom:5px;">
+                            <div class="wide column">
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="ui grid">
+                                        <div class="two wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_code" autocomplete="off" placeholder="کد آموزگار" style="text-align:center;" maxlength="4"
+                                                    required>
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_code').invalid">{{getErrorMessage(dataForm.get('teacher_code'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="two wide column">
+                                            <mat-form-field style="width:80px;">
+                                                <mat-select placeholder="جنسیت" formControlName="teacher_sex" required>
+                                                    <mat-option *ngFor="let ts of teacher_sex_list" [value]="ts">{{ts}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_name" autocomplete="off" placeholder="نام آموزگار" style="text-align:right;" required>
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_name').invalid">{{getErrorMessage(dataForm.get('teacher_name'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="three wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <mat-select placeholder="مدرسه" formControlName="teacher_school" required>
+                                                    <mat-option *ngFor="let s of school_list" [value]="s.school_name">{{s.school_name}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="three wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <mat-select placeholder="مقطع تحصیلی" formControlName="teacher_study" multiple required>
+                                                    <mat-option *ngFor="let s of study_list" [value]="s.study_name">{{s.study_name}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top:0px;padding-bottom:5px;">
+                                    <div class="ui grid">
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_degree" autocomplete="off" placeholder="مدرک تحصیلی" style="text-align:center;">
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_degree').invalid">{{getErrorMessage(dataForm.get('teacher_degree'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_email" autocomplete="off" placeholder="آدرس ایمیل" style="text-align:left;direction:ltr;">
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_email').invalid">{{getErrorMessage(dataForm.get('teacher_email'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="three wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_mobile" autocomplete="off" placeholder="شماره همراه" style="text-align:center;">
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_mobile').invalid">{{getErrorMessage(dataForm.get('teacher_mobile'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="three wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_sabeghe" autocomplete="off" placeholder="تاریخ استخدام" style="text-align:center;">
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_sabeghe').invalid">{{getErrorMessage(dataForm.get('teacher_sabeghe'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top:0px;padding-bottom:5px;">
+                                    <div class="ui grid">
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_account" autocomplete="off" placeholder="شماره شبا" style="direction:ltr;text-align:center;">
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_account').invalid">{{getErrorMessage(dataForm.get('teacher_account'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_card" autocomplete="off" placeholder="شماره کارت" style="direction:ltr;text-align:center;">
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_card').invalid">{{getErrorMessage(dataForm.get('teacher_card'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="six wide column">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top:0px;padding-bottom:5px;">
+                                    <div class="ui grid">
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input matInput formControlName="teacher_username" autocomplete="off" placeholder="نام کاربری" style="text-align:center;"
+                                                    required>
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_username').invalid">{{getErrorMessage(dataForm.get('teacher_username'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="four wide column">
+                                            <mat-form-field style="width:100%;">
+                                                <input type="password" matInput formControlName="teacher_password" autocomplete="off" placeholder="رمز عبور" style="text-align:center;"
+                                                    required>
+                                                <mat-error align="right" *ngIf="dataForm.get('teacher_password').invalid">{{getErrorMessage(dataForm.get('teacher_password'))}}</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="three wide column">
+                                            <mat-form-field style="width:100%">
+                                                <mat-select placeholder="گروه کاربری" formControlName="teacher_role" required>
+                                                    <mat-option *ngFor="let s of role_list" [value]="s">{{s}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="three wide column">
+                                            <mat-checkbox formControlName="isEnable">فعال/غیرفعال</mat-checkbox>
+                                            <mat-checkbox formControlName="isAdmin">مدیر برنامه</mat-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui grid container" style="padding:20px;">
+                    <div class="wide column mat-elevation-z4">
+                        <mat-table #datagrid [dataSource]="dataSource" matSort>
+                            <ng-container matColumnDef="select">
+                                <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                                    </mat-checkbox>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="teacher_code">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> کد آموزگار </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.teacher_code}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="teacher_name">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> نام آموزگار </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.teacher_name}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="teacher_school">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> نام مدرسه </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.teacher_school}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="teacher_study">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> مقطع تحصیلی </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.teacher_study}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="teacher_username">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> نام کاربری </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.teacher_username}} </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'row-select': selectedRowIndex == row.teacher_code}"
+                                (click)="selectRow(row)"></mat-row>
+                        </mat-table>
+                        <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="ui bottom attached segment">
+        <div class="ui grid">
+            <div class="wide left aligned column">
+                <a class="ui teal tag label">{{date_message}}</a>
+                <button mat-raised-button ripple color="accent" *ngIf="state_save" [disabled]="!dataForm.valid" (click)="save(dataForm.value)"
+                    type="button">ذخیره اطلاعات</button>
+                <button mat-raised-button ripple color="primary" *ngIf="!state_save" [disabled]="!dataForm.valid" (click)="update(dataForm.value)"
+                    type="button">ویرایش اطلاعات</button>
+                <button mat-icon-button ripple color="primary" type="reset" (click)="resetForm()" title="پاک کردن صفحه">
+                    <i class="fas fa-sync fa-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<ng-progress color="#d50000" [thick]="true" [trickleSpeed]="500" [speed]="250" style="z-index:1002 !important;"></ng-progress>
+<mat-toolbar color="primary" class="mat-elevation-z4 app-navbar" *ngIf="isLoggedIn$ | async">
+  <div class="ui fluid container">
+    <div class="ui grid">
+      <div class="four wide right aligned column">
+        <div class="header-title">
+          <a [routerLink]="'/'">
+            <i class="fa fa-home fa-2x"></i>
+            برنامه آزمون مدرسه
+          </a>
+        </div>
+      </div>
+      <div class="four wide column">
+        <div style="padding-top:4px;">
+        </div>
+      </div>
+      <div class="eight wide left aligned column">
+        <button mat-icon-button (click)="sidenav.open()">
+          <i class="fas fa-bars fa-2x"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav mode="over" #sidenav position="end">Drawer content</mat-sidenav>
+  <div class="main-content">
+    <ng-container *ngIf="progressRef.state$ | async; let state">
+      <mat-spinner color="accent" *ngIf="state.active"
+        style="position: fixed;top: 50%;left: 50%;margin-left: -100px;margin-top: -50px;z-index:99;"></mat-spinner>
+    </ng-container>
+    <router-outlet></router-outlet>
+    <!--<div class="fab">
+      <span class="fab-action-button">
+        <i class="fab-action-button__icon"></i>
+      </span>
+      <ul class="fab-buttons">
+        <li class="fab-buttons__item">
+          <a class="fab-buttons__link" data-tooltip="جستجوی پیشرفته">
+            <i class="fa fa-search"></i>
+          </a>
+        </li>
+      </ul>
+    </div>-->
+  </div>
+</mat-sidenav-container>

@@ -1,0 +1,114 @@
+<div class="ui container mat-elevation-z4">
+  <div class="ui top attached inverted teal segment" style="border:none;">
+    <h2 class="ui header">
+      <i class="phone icon"></i>
+      <div class="content">
+        مشخصات دروس آموزشی
+        <div class="sub header">تعریف مشخصات درس، ویرایش اطلاعات و سایر موارد</div>
+      </div>
+    </h2>
+  </div>
+  <div class="ui attached segment">
+    <div class="ui container" style="overflow:hidden;">
+      <form novalidate [formGroup]="dataForm">
+        <div class="ui stackable grid container" style="padding-top:10px;">
+          <div class="row" style="padding-bottom:5px;">
+            <div class="eight wide column">
+              <div class="row" style="padding-top:0px;padding-bottom:5px;">
+                <div class="wide column" formGroupName="study">
+                  <mat-form-field>
+                    <mat-select (selectionChange)="studyChange($event)" placeholder="مقطع تحصیلی" formControlName="study_name" required>
+                      <mat-option *ngFor="let ts of study_list" [value]="ts.study_name">{{ts.study_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row" style="padding-bottom:5px;">
+                <div class="wide column">
+                  <mat-form-field style="width:150px;">
+                    <input matInput formControlName="lesson_code" autocomplete="off" placeholder="کد درس" style="text-align:center;" maxlength="3"
+                      required>
+                    <mat-error align="right" *ngIf="dataForm.get('lesson_code').invalid">{{getErrorMessage(dataForm.get('lesson_code'))}}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row" style="padding-top:0px;padding-bottom:5px;">
+                <div class="wide column">
+                  <mat-form-field style="width:300px;">
+                    <input matInput formControlName="lesson_name" autocomplete="off" placeholder="نام درس" style="text-align:right;" required>
+                    <mat-error align="right" *ngIf="dataForm.get('lesson_name').invalid">{{getErrorMessage(dataForm.get('lesson_name'))}}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row" style="padding-bottom:5px;">
+                <div class="wide column">
+                  <label class="myFile" style="width:100%;">
+                    <img class="ui small image" [src]="imgSrc">
+                    <input id="fileImport" name="single" type="file" accept="image/*" (change)="readFile($event);" />
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="eight wide column">
+              <div class="mat-elevation-z4">
+                <div class="filter-header">
+                  <mat-form-field style="width:100%;">
+                    <input #inputFilter matInput (keyup)="applyFilter($event.target.value)" placeholder="جستجو" autocomplete="off">
+                  </mat-form-field>
+                </div>
+                <mat-table #datagrid [dataSource]="dataSource" matSort>
+                  <ng-container matColumnDef="select">
+                    <mat-header-cell *matHeaderCellDef class="col-select"> </mat-header-cell>
+                    <mat-cell class="col-select" *matCellDef="let row">
+                      <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lesson_code">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> کد درس </mat-header-cell>
+                    <mat-cell class="col-lesson-code" *matCellDef="let element"> {{element.lesson_code}} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lesson_name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> نام درس </mat-header-cell>
+                    <mat-cell class="col-lesson-name" *matCellDef="let element"> {{element.lesson_name}} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="study.study_name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> مقطع تحصیلی </mat-header-cell>
+                    <mat-cell class="col-study-name" *matCellDef="let element"> {{element.study.study_name}} </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'row-select': selectedRowIndex == row.lesson_code}"
+                    (click)="selectRow(row)"></mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="padding-top:0px;padding-bottom:0px;">
+            <div class="wide column">
+              <div class="ui divider"></div>
+            </div>
+          </div>
+          <div class="row" style="padding-top:0px;">
+            <div class="wide left aligned column">
+              <a class="ui teal tag label">{{date_message}}</a>
+              <button mat-raised-button ripple color="accent" *ngIf="state_save" [disabled]="!dataForm.valid" (click)="save(dataForm.value)"
+                type="button">ذخیره اطلاعات</button>
+              <button mat-raised-button ripple color="primary" *ngIf="!state_save" [disabled]="!dataForm.valid" (click)="update(dataForm.value)"
+                type="button">ویرایش اطلاعات</button>
+              <button mat-icon-button ripple color="primary" type="reset" (click)="resetForm()" title="پاک کردن صفحه">
+                <i class="fas fa-sync fa-lg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

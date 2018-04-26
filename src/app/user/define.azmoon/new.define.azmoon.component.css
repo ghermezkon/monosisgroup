@@ -1,0 +1,20 @@
+:host /deep/ .col-question_text{
+    text-align:center;
+    width:50%;
+}
+:host /deep/ .col-index{
+    text-align:center;
+    width:50%;
+}
+:host /deep/ .col-question_level{
+    text-align:center;
+    width:20%;
+}
+:host /deep/ .col-question_grade{
+    text-align:center;
+    width:10%;
+}
+:host /deep/ .col-answer_fine{
+    text-align:center;
+    width:10%;
+}

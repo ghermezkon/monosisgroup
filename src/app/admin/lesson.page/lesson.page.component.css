@@ -1,0 +1,10 @@
+:host /deep/ .col-lesson-code{
+    text-align:center;
+}
+.mat-column-lesson_code{
+    max-width:30%;
+}
+:host /deep/ .col-lesson-name{
+    text-align:center;
+    width:70%;
+}

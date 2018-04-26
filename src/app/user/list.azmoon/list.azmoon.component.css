@@ -1,0 +1,57 @@
+:host /deep/ mat-header-cell.mat-column-select, .mat-column-select{
+    text-align:center !important;
+    max-width:4% !important;
+}
+:host /deep/ mat-header-cell.mat-column-exam_code, .mat-column-exam_code{
+    text-align:center !important;
+    max-width:7% !important;
+}
+:host /deep/ mat-header-cell.mat-column-exam_name, .mat-column-exam_name{
+    text-align:center !important;
+    max-width:50% !important;
+}
+:host /deep/ mat-header-cell.mat-column-exam_study, .mat-column-exam_study{
+    text-align:center !important;
+    max-width:30% !important;
+}
+:host /deep/ mat-header-cell.mat-column-exam_level, .mat-column-exam_level{
+    text-align:center !important;
+    max-width:10% !important;
+}
+:host /deep/ mat-header-cell.mat-column-exam_lesson, .mat-column-exam_lesson{
+    text-align:center !important;
+    width:10% !important;
+}
+:host /deep/ mat-header-cell.mat-column-last_update_long, .mat-column-last_update_long{
+    text-align:center !important;
+    width:30% !important;
+}
+:host /deep/ mat-header-cell.mat-column-operate, .mat-column-operate{
+    text-align:center !important;
+    max-width:4% !important;
+}
+:host /deep/ mat-header-cell.mat-column-update_admin, .mat-column-update_admin{
+    text-align:center !important;
+    max-width:4% !important;
+}
+/*-------------------------------------------------------------------------------------*/
+:host /deep/ mat-header-cell.mat-column-question_number, .mat-column-question_number{
+    text-align:center !important;
+    max-width:20% !important;
+}
+:host /deep/ mat-header-cell.mat-column-question_grade, .mat-column-question_grade{
+    text-align:center !important;
+    max-width:20% !important;
+}
+:host /deep/ mat-header-cell.mat-column-question_level, .mat-column-question_level{
+    text-align:center !important;
+    max-width:20% !important;
+}
+:host /deep/ mat-header-cell.mat-column-question_text, .mat-column-question_text{
+    text-align:center !important;
+    max-width:50% !important;
+}
+:host /deep/ mat-header-cell.mat-column-open_dialog, .mat-column-open_dialog{
+    text-align:center !important;
+    max-width:8% !important;
+}

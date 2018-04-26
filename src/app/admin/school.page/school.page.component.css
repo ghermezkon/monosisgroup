@@ -1,0 +1,14 @@
+:host /deep/ .col-school-code{
+    text-align:center;
+}
+.mat-column-school_code{
+    max-width:20%;
+}
+:host /deep/ .col-school-name{
+    text-align:center;
+    width:40%;
+}
+:host /deep/ .col-school-manager{
+    text-align:center;
+    width:40%;
+}

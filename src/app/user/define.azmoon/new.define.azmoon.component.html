@@ -1,0 +1,385 @@
+<div class="ui fluid container" style="padding:10px;">
+  <div class="ui segments">
+    <div class="ui top attached inverted teal segment" style="border:none;">
+        <h2 class="ui header">
+            <div class="content">
+                تعریف آزمون جدید
+                <div class="sub header">تعریف آزمون جدید، ویرایش آزمون ها و سایر موارد</div>
+            </div>
+        </h2>
+    </div>
+    <div class="ui attached segment">
+        <div style="overflow:hidden;">
+            <div class="ui grid">
+                <!--Question Information-->
+                <div class="row">
+                    <div class="three wide column">
+                        <div class="row" [formGroup]="dataForm">
+                            <div class="ui raised segments">
+                                <div class="ui olive center aligned segment">
+                                    <div class="wide column" style="padding-bottom:5px;">
+                                        <mat-form-field style="width:100%;">
+                                            <input matInput formControlName="exam_name" autocomplete="off" placeholder="عنوان آزمون" style="text-align:right;" required>
+                                            <mat-error align="right" *ngIf="dataForm.get('exam_name').invalid">{{getErrorMessage(dataForm.get('exam_name'))}}</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="wide column" style="padding-bottom:5px;">
+                                        <mat-form-field style="width:100%;" [class.disabled-input]="isQuestionTable">
+                                            <mat-select placeholder="آموزگار" (selectionChange)="teacherChange($event)" formControlName="exam_teacher" required>
+                                                <mat-option *ngFor="let t of teacher_list" [value]="t.teacher_name">{{t.teacher_name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="wide column" style="padding-bottom:5px;">
+                                        <mat-form-field style="width:100%;" [class.disabled-input]="isQuestionTable">
+                                            <mat-select placeholder="مقطع تحصیلی" (selectionChange)="studyChange($event)" formControlName="exam_study" required>
+                                                <mat-option *ngFor="let s of study_list" [value]="s">{{s}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="wide column" style="padding-bottom:5px;">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-select placeholder="سطح آزمون" formControlName="exam_level" required>
+                                                <mat-option *ngFor="let l of level_list" [value]="l">{{l}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="wide column" style="padding-bottom:5px;">
+                                        <mat-form-field style="width:100%;" [class.disabled-input]="isQuestionTable">
+                                            <mat-select placeholder="نام درس" formControlName="exam_lesson" required>
+                                                <mat-option *ngFor="let l of lesson_list" [value]="l.lesson_name">{{l.lesson_name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="wide column">
+                                        <button mat-raised-button color="warn" style="width:100%;" type="button" [disabled]="!dataForm.valid || isQuestionTable"
+                                            (click)="isQuestionTable = true">ایجاد آزمون</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--One Question Segment-->
+                    <div class="seven wide column" *ngIf="isQuestionTable">
+                        <div class="row">
+                            <div class="wide column">
+                                <div class="ui raised segments">
+                                    <div class="ui top attached segment violet">
+                                        <mat-form-field style="width:100%;">
+                                            <input matInput autocomplete="off" [formControl]="azmoon_question" placeholder="عنوان سوال" style="text-align:right;" required>
+                                            <mat-error align="right" *ngIf="azmoon_question.invalid">{{getErrorMessage(azmoon_question)}}</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="ui segment" style="margin-bottom:0px;padding-bottom:0px;">
+                                        <div class="ui grid" style="margin-bottom:0px;padding-bottom:0px;">
+                                            <div class="wide column" style="padding-bottom:0px;margin-bottom:0px;">
+                                                <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper" style="margin-bottom:0px;padding-bottom:0px;">
+                                                    <!-- <ng-template matStepperIcon="edit">
+                                                        <i class="fa fa-check" style="color:yellow !important;"></i>
+                                                    </ng-template>
+                                                    <ng-template matStepperIcon="done">
+                                                        <i class="fa fa-bars"></i>
+                                                    </ng-template> -->
+                                                    <mat-step [stepControl]="answerOne" style="margin-bottom:0px;padding-bottom:0px;">
+                                                        <form [formGroup]="answerOne">
+                                                            <ng-template matStepLabel>گزینه اول</ng-template>
+                                                            <div class="ui grid">
+                                                                <div class="eight wide column">
+                                                                    <mat-form-field style="width:100%;">
+                                                                        <input matInput autocomplete="off" placeholder="پاسخ تشریحی" formControlName="answer_text" required>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="eight wide column">
+                                                                    <div class="ui grid">
+                                                                        <div class="row">
+                                                                            <div class="wide column">
+                                                                                <label class="myFile" style="width:100%;">
+                                                                                    <button mat-raised-button color="warn" style="width:100%;">انتخاب پاسخ تصویری</button>
+                                                                                    <input id="fileImportOne" name="single" type="file" accept="image/*" (change)="readFileOne($event);" />
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="wide column center aligned">
+                                                                                <div class="ui purple label" style="width:100%;clear:both;font-weight:normal;" *ngIf="fileError_one">{{fileError_one}}</div>
+                                                                                <canvas id="canvasOne" style="width: 20%;height: auto;">
+                                                                                    Sorry. Your browser does not support HTML5 canvas element.
+                                                                                </canvas>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ui divider"></div>
+                                                            <div style="margin-bottom:0px !important;">
+                                                                <button mat-raised-button color="primary" matStepperNext>گزینه بعدی</button>
+                                                                <button mat-icon-button ripple color="primary" type="reset" (click)="answerOne_reset()" title="پاک کردن صفحه">
+                                                                    <i class="fas fa-sync fa-lg"></i>
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </mat-step>
+                                                    <mat-step [stepControl]="answerTwo">
+                                                        <form [formGroup]="answerTwo">
+                                                            <ng-template matStepLabel>گزینه دوم</ng-template>
+                                                            <div class="ui grid">
+                                                                <div class="eight wide column">
+                                                                    <mat-form-field style="width:100%;">
+                                                                        <input matInput autocomplete="off" placeholder="پاسخ تشریحی" formControlName="answer_text" required>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="eight wide column">
+                                                                    <div class="ui grid">
+                                                                        <div class="row">
+                                                                            <div class="wide column">
+                                                                                <label class="myFile" style="width:100%;">
+                                                                                    <button mat-raised-button color="warn" style="width:100%;">انتخاب پاسخ تصویری</button>
+                                                                                    <input id="fileImportTwo" name="single" type="file" accept="image/*" (change)="readFileTwo($event);" />
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="wide column center aligned">
+                                                                                <div class="ui purple label" style="width:100%;clear:both;font-weight:normal;" *ngIf="fileError_two">{{fileError_two}}</div>
+                                                                                <canvas id="canvasTwo" style="width: 20%;height: auto;">
+                                                                                    Sorry. Your browser does not support HTML5 canvas element.
+                                                                                </canvas>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ui divider"></div>
+                                                            <div class="ui grid">
+                                                                <div class="eight wide column right aligned">
+                                                                    <button mat-raised-button matStepperNext color="primary" type="button">گزینه بعدی</button>
+                                                                    <button mat-icon-button ripple color="primary" type="reset" (click)="answerTwo_reset()" title="پاک کردن صفحه">
+                                                                        <i class="fas fa-sync fa-lg"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="eight wide column left aligned">
+                                                                    <button mat-raised-button matStepperPrevious color="accent" type="button">گزینه قبلی</button>
+                                                                    <button mat-icon-button ripple color="accent" type="reset" (click)="answerTwo_reset()" title="پاک کردن صفحه">
+                                                                        <i class="fas fa-sync fa-lg"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </mat-step>
+                                                    <mat-step [stepControl]="answerThree">
+                                                        <ng-template matStepLabel>گزینه سوم</ng-template>
+                                                        <form [formGroup]="answerThree">
+                                                            <div class="ui grid">
+                                                                <div class="eight wide column">
+                                                                    <mat-form-field style="width:100%;">
+                                                                        <input matInput autocomplete="off" placeholder="پاسخ تشریحی" formControlName="answer_text" required>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="eight wide column">
+                                                                    <div class="ui grid">
+                                                                        <div class="row">
+                                                                            <div class="wide column">
+                                                                                <label class="myFile" style="width:100%;">
+                                                                                    <button mat-raised-button color="warn" style="width:100%;">انتخاب پاسخ تصویری</button>
+                                                                                    <input id="fileImportThree" name="single" type="file" accept="image/*" (change)="readFileThree($event);" />
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="wide column center aligned">
+                                                                                <div class="ui purple label" style="width:100%;clear:both;font-weight:normal;" *ngIf="fileError_three">{{fileError_three}}</div>
+                                                                                <canvas id="canvasThree" style="width: 20%;height: auto;">
+                                                                                    Sorry. Your browser does not support HTML5 canvas element.
+                                                                                </canvas>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ui divider"></div>
+                                                            <div class="ui grid">
+                                                                <div class="eight wide column right aligned">
+                                                                    <button mat-raised-button matStepperNext color="primary" type="button">گزینه بعدی</button>
+                                                                    <button mat-icon-button ripple color="primary" type="reset" (click)="answerThree_reset()" title="پاک کردن صفحه">
+                                                                        <i class="fas fa-sync fa-lg"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="eight wide column left aligned">
+                                                                    <button mat-raised-button matStepperPrevious color="accent" type="button">گزینه قبلی</button>
+                                                                    <button mat-icon-button ripple color="accent" type="reset" (click)="answerThree_reset()" title="پاک کردن صفحه">
+                                                                        <i class="fas fa-sync fa-lg"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </mat-step>
+                                                    <mat-step [stepControl]="answerFour">
+                                                        <form [formGroup]="answerFour">
+                                                            <ng-template matStepLabel>گزینه چهارم</ng-template>
+                                                            <div class="ui grid">
+                                                                <div class="eight wide column">
+                                                                    <mat-form-field style="width:100%;">
+                                                                        <input matInput autocomplete="off" placeholder="پاسخ تشریحی" formControlName="answer_text" required>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="eight wide column">
+                                                                    <div class="ui grid">
+                                                                        <div class="row">
+                                                                            <div class="wide column">
+                                                                                <label class="myFile" style="width:100%;">
+                                                                                    <button mat-raised-button color="warn" style="width:100%;">انتخاب پاسخ تصویری</button>
+                                                                                    <input id="fileImportFour" name="single" type="file" accept="image/*" (change)="readFileFour($event);" />
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="wide column center aligned">
+                                                                                <div class="ui purple label" style="width:100%;clear:both;font-weight:normal;" *ngIf="fileError_four">{{fileError_four}}</div>
+                                                                                <canvas id="canvasFour" style="width: 20%;height: auto;">
+                                                                                    Sorry. Your browser does not support HTML5 canvas element.
+                                                                                </canvas>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ui divider"></div>
+                                                            <div class="ui grid">
+                                                                <div class="sixteen wide column left aligned">
+                                                                    <button mat-raised-button matStepperPrevious color="accent" type="button">گزینه قبلی</button>
+                                                                    <button mat-icon-button ripple color="accent" type="reset" (click)="answerFour_reset()" title="پاک کردن صفحه">
+                                                                        <i class="fas fa-sync fa-lg"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </mat-step>
+                                                </mat-horizontal-stepper>
+                                                <canvas id="canvas" style="width: 1px;height: 1px;">
+                                                    Sorry. Your browser does not support HTML5 canvas element.
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="six wide column" *ngIf="isQuestionTable">
+                        <div class="row">
+                            <div class="wide column">
+                                <div class="ui raised segments">
+                                    <div class="ui top attached segment purple">
+                                        <div class="ui grid">
+                                            <div class="wide column">
+                                                <div class="ui grid">
+                                                    <div class="row" style="padding-bottom:0px;">
+                                                        <div class="five wide column">
+                                                            <mat-form-field style="width:100%;">
+                                                                <mat-select placeholder="گزینه صحیح" [formControl]="answer_fine" style="text-align:center;" required>
+                                                                    <mat-option [value]="None" style="text-align:center !important;"></mat-option>
+                                                                    <mat-option [value]="1" style="text-align:center !important;">گزینه اول</mat-option>
+                                                                    <mat-option [value]="2" style="text-align:center !important;">گزینه دوم</mat-option>
+                                                                    <mat-option [value]="3" style="text-align:center !important;">گزینه سوم</mat-option>
+                                                                    <mat-option [value]="4" style="text-align:center !important;">گزینه چهارم</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="six wide column">
+                                                            <mat-form-field style="width:100%;">
+                                                                <input matInput autocomplete="off" [formControl]="exam_time" placeholder="مدت زمان برگزاری آزمون به دقیقه" style="text-align:center;">
+                                                                <mat-error align="right"></mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="padding-bottom:0px;">
+                                                        <div class="sixteen wide column">
+                                                            <mat-form-field style="width:100%;">
+                                                                <input matInput autocomplete="off" [formControl]="answer_help" placeholder="راهنمای حل مساله" style="text-align:right;">
+                                                                <mat-error align="right"></mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui bottom attached segment">
+                                        <div class="ui grid">
+                                            <div class="three wide column">
+                                                <mat-form-field style="width:100%;">
+                                                    <input matInput autocomplete="off" [formControl]="question_grade" placeholder="نمره سوال" style="text-align:center;" required>
+                                                    <mat-error align="right"></mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="four wide column">
+                                                <mat-form-field style="width:100%;">
+                                                    <mat-select placeholder="سطح سوال" [formControl]="question_level" required>
+                                                        <mat-option *ngFor="let q of question_level_list" [value]="q">{{q}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="nine wide column">
+                                                <button mat-raised-button color="accent" style="width:100%;" *ngIf="state_save" [disabled]="(!answerOne.valid || !answerTwo.valid || !answerThree.valid || !answerFour.valid) ||
+                                                    question_level.invalid || question_grade.invalid || answer_fine.invalid || azmoon_question.invalid"
+                                                    type="button" (click)="insert_new_question('insert', 0)">ثبت سوال و طرح سوال جدید</button>
+                                                <button mat-raised-button color="primary" *ngIf="!state_save" style="width:100%;" [disabled]="(!answerOne.valid || !answerTwo.valid || !answerThree.valid || !answerFour.valid) ||
+                                                    question_level.invalid || question_grade.invalid || answer_fine.invalid || azmoon_question.invalid"
+                                                    type="button" (click)="update_new_question()">ویرایش سوال و پاسخها</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Question Table-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui attached relaxed segment" *ngIf="isQuestionTable">
+      <mat-table #datagrid [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef class="col-select"> </mat-header-cell>
+          <mat-cell class="col-select" *matCellDef="let row">
+            <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="index" class="col-index">
+          <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+          <mat-cell class="col-index" *matCellDef="let i = index">{{i+1}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="question_text">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> عنوان سوال </mat-header-cell>
+          <mat-cell class="col-question_text" *matCellDef="let element"> {{element.question_text}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="question_level">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> سطح سوال </mat-header-cell>
+          <mat-cell class="col-question_level" *matCellDef="let element"> {{element.question_level}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="question_grade">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> نمره سوال </mat-header-cell>
+          <mat-cell class="col-question_grade" *matCellDef="let element"> {{element.question_grade}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="answer_fine">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> گزینه صحیح </mat-header-cell>
+          <mat-cell class="col-answer_fine" *matCellDef="let element"> {{element.answer_fine}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'row-select': selectedRowIndex == row.question_number}"
+                 (click)="selectRow(row)"></mat-row>
+      </mat-table>
+      <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+      </mat-paginator>
+    </div>
+    <div class="ui bottom attached relaxed segment" *ngIf="isQuestionTable">
+      <button mat-raised-button color="warn" style="width:100%;" type="button" [disabled]="!dataForm.valid || data_list.length <= 0"
+              (click)="save(dataForm.value)">ذخیره کلیه اطلاعات و ثبت آزمون</button>
+    </div>
+  </div>
+</div>

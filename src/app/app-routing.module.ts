@@ -1,0 +1,29 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { MainPageComponent } from './main.page/main.page.component';
+import { CommonModule } from '@angular/common';
+import { SharedModule } from './shared.modules';
+import { HighlightDirective } from './util/card.directive';
+import { LoginComponent } from './login/login.page.component';
+import { AuthGuard } from './http.service/AuthGuard';
+
+const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: MainPageComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'school', loadChildren: 'app/admin/school.page/school-routing.module#SchoolModule', canLoad: [AuthGuard] },
+  { path: 'study', loadChildren: 'app/admin/study.page/study-routing.module#StudyModule', canLoad: [AuthGuard] },
+  { path: 'lesson', loadChildren: 'app/admin/lesson.page/lesson-routing.module#LessonModule', canLoad: [AuthGuard] },
+  { path: 'teacher', loadChildren: 'app/admin/teacher.page/teacher-routing.module#TeacherModule', canLoad: [AuthGuard]},
+  { path: 'define.azmoon', loadChildren: 'app/user/define.azmoon/define.azmoon-routing.module#DefineAzmoonModule', canLoad: [AuthGuard] },
+  { path: 'list.azmoon', loadChildren: 'app/user/list.azmoon/list.azmoon-routing.module#ListAzmoonModule', canLoad: [AuthGuard] },
+  { path: 'price.azmoon', loadChildren: 'app/user/price.azmoon/price.azmoon-routing.module#PriceAzmoonModule', canLoad: [AuthGuard] },
+];
+
+@NgModule({
+  imports: [CommonModule, SharedModule, RouterModule.forRoot(routes)],
+  declarations: [MainPageComponent, LoginComponent, HighlightDirective],
+  exports: [RouterModule],
+  providers: []
+})
+export class AppRoutingModule { }

@@ -1,0 +1,37 @@
+<div class="ui container three column centered grid">
+    <div class="column" style="padding-top:20vh;">
+        <div class="ui stacked segments">
+            <div class="ui top attached green inverted segment" style="border:none;text-align:center;">ورود به برنامه گروه آموزشی مونوسیس</div>
+            <div class="ui segment">
+                <div class="ui grid">
+                    <div class="row one column centered">
+                        <div class="wide column" style="text-align:center;">
+                            <mat-form-field style="width:80%;">
+                                <input matInput placeholder="نام کاربری" [formControl]="username" autocomplete="off" style="direction:ltr;text-align:center;">
+                                <mat-icon matSuffix>
+                                    <i class="fas fa-user" style="color:gray"></i>
+                                </mat-icon>
+                                <mat-error align="right" *ngIf="username.invalid">{{getErrorMessage(username)}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="wide column" style="text-align:center;">
+                            <mat-form-field style="width:80%;">
+                                <input type="password" matInput placeholder="رمز عبور" [formControl]="password" autocomplete="off" style="text-align:center;">
+                                <mat-icon matSuffix>
+                                    <i class="fas fa-key" style="color:gray"></i>
+                                </mat-icon>
+                                <mat-error align="right" *ngIf="password.invalid">{{getErrorMessage(password)}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="wide column" style="text-align:center;">
+                            <button mat-raised-button color="accent" (click)="login()" [disabled]="username.invalid || password.invalid">ورود به سیستم</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui red inverted segment" *ngIf="isLoginError$ | async" style="text-align:center;">
+                {{isLoginError$ | async}}
+            </div>
+        </div>
+    </div>
+</div>
