@@ -3,7 +3,7 @@ const
     express = require('express'),
     _objectId = require('mongodb').ObjectID,
     router = express.Router();
-require('./middleware')1
+require('./middleware')
 //---------------------------------------
 router
     .post('/users', [middleware.hashPWD], (req, res) => {
