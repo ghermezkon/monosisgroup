@@ -60,7 +60,7 @@ router.get('/find_exam_lesson_by_teacher_name/:exam_teacher/:student_id', (req, 
         res.json(data);
     })
 })
-router.get('/find_exam_list_by_lesson_name/:exam_lesson/:exam_teacher', (req, res) => {
+router.get('/find_exam_list_by_lesson_name/:exam_lesson/:exam_teacher/:student_id', (req, res) => {
     req.app.db.collection('azmoon_exam').aggregate([
         // {
         //     $match: {
@@ -77,10 +77,21 @@ router.get('/find_exam_list_by_lesson_name/:exam_lesson/:exam_teacher', (req, re
         //     $sort: { 'last_update_short': -1 }
         // }
         {
-            $lookup: {
+            $lookup:{
                 from: 'azmoon_app',
-                localField: '_id',
-                foreignField: 'exam_id',
+                let: {exam_id1: '$_id'},
+                pipeline:[
+                    {
+                        $match:{
+                            $expr:{
+                                $and:[
+                                    {$eq: ['$exam_id', '$$exam_id1']},
+                                    {$eq:['$student_id', _objectId(req.params.student_id)]}
+                                ]
+                            }
+                        }
+                    }
+                ],
                 as: 'result_exam'
             }
         },
