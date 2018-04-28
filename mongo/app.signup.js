@@ -23,6 +23,8 @@ router
         delete req.body.password;
         let _id = req.body._id;
         delete req.body._id;
+        delete req.body.$loki;
+        delete req.body.meta;
         req.app.db.collection(tableDB).update({ _id: _objectId(_id) }, { $set: req.body }, (err, data) => {
             if (err) {
                 res.send(err);
