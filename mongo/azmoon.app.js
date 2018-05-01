@@ -27,16 +27,16 @@ router.get('/find_teacher_for_app/:study', (req, res) => {
 router.get('/find_exam_lesson_by_teacher_name/:exam_teacher/:student_id', (req, res) => {
     req.app.db.collection('azmoon_exam').aggregate([
         {
-            $lookup:{
+            $lookup: {
                 from: 'azmoon_app',
-                let: {exam_id1: '$_id'},
-                pipeline:[
+                let: { exam_id1: '$_id' },
+                pipeline: [
                     {
-                        $match:{
-                            $expr:{
-                                $and:[
-                                    {$eq: ['$exam_id', '$$exam_id1']},
-                                    {$eq:['$student_id', _objectId(req.params.student_id)]}
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$exam_id', '$$exam_id1'] },
+                                    { $eq: ['$student_id', _objectId(req.params.student_id)] }
                                 ]
                             }
                         }
@@ -77,16 +77,16 @@ router.get('/find_exam_list_by_lesson_name/:exam_lesson/:exam_teacher/:student_i
         //     $sort: { 'last_update_short': -1 }
         // }
         {
-            $lookup:{
+            $lookup: {
                 from: 'azmoon_app',
-                let: {exam_id1: '$_id'},
-                pipeline:[
+                let: { exam_id1: '$_id' },
+                pipeline: [
                     {
-                        $match:{
-                            $expr:{
-                                $and:[
-                                    {$eq: ['$exam_id', '$$exam_id1']},
-                                    {$eq:['$student_id', _objectId(req.params.student_id)]}
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$exam_id', '$$exam_id1'] },
+                                    { $eq: ['$student_id', _objectId(req.params.student_id)] }
                                 ]
                             }
                         }
@@ -177,6 +177,68 @@ router.get('/check_security_code/:code', (req, res) => {
     //     res.json(false);
     // }
     res.json(true);
+})
+router.get('/find_student_exam_list/:id', (req, res) => {
+    req.app.db.collection('azmoon_exam').aggregate([
+        {
+            $lookup: {
+                from: 'azmoon_app',
+                let: { exam_id1: '$_id' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$exam_id', '$$exam_id1'] },
+                                    { $eq: ['$student_id', _objectId("5ae15a665d4299128cd8f0f5")] }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                as: 'result_exam'
+            }
+        },
+        { $match: { $and: [{ 'isEnable': true }, { 'isAdmin': true }, { 'result_exam': { $size: 1 } }] } },
+        {
+            $project: {
+                exam_name: 1, exam_teacher: 1, exam_study: 1, exam_lesson: 1, exam_price: 1, exam_level: 1, result_exam: 1, _id: 1
+            }
+        }
+    ]).toArray((err, data) => {
+        res.json(data);
+    })
+})
+router.get('/find_student_exam_detail/:exam_id/:id', (req, res) => {
+    req.app.db.collection('azmoon_exam').aggregate([
+        {
+            $lookup: {
+                from: 'azmoon_app',
+                let: { exam_id1: '$_id' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$exam_id', '$$exam_id1'] },
+                                    { $eq: ['$student_id', _objectId("5ae15a665d4299128cd8f0f5")] }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                as: 'result_exam'
+            }
+        },
+        { $match: { $and: [{ 'isEnable': true }, { 'isAdmin': true }, { 'result_exam': { $size: 1 } }, { _id: _objectId(req.params.exam_id) }] } },
+        {
+            $project: {
+                exam_questions: 1, result_exam: 1, exam_name: 1, _id: 1
+            }
+        }
+    ]).toArray((err, data) => {
+        res.json(data);
+    })
 })
 //---------------------------------------
 router.post('/result_exam', (req, res) => {
