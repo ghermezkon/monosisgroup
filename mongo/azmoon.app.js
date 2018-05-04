@@ -190,7 +190,7 @@ router.get('/find_student_exam_list/:id', (req, res) => {
                             $expr: {
                                 $and: [
                                     { $eq: ['$exam_id', '$$exam_id1'] },
-                                    { $eq: ['$student_id', _objectId("5ae15a665d4299128cd8f0f5")] }
+                                    { $eq: ['$student_id', _objectId(req.params.id)] }
                                 ]
                             }
                         }
@@ -221,7 +221,7 @@ router.get('/find_student_exam_detail/:exam_id/:id', (req, res) => {
                             $expr: {
                                 $and: [
                                     { $eq: ['$exam_id', '$$exam_id1'] },
-                                    { $eq: ['$student_id', _objectId("5ae15a665d4299128cd8f0f5")] }
+                                    { $eq: ['$student_id', _objectId(req.params.id)] }
                                 ]
                             }
                         }

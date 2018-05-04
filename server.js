@@ -9,8 +9,8 @@ http = require('http'),
   cors = require('cors')  
   mongoClient = require('mongodb').MongoClient;
 //------------------------------------------------------------------------------
-//const url = 'mongodb://localhost:27017';
-const url = 'mongodb://172.18.200.11:27017';
+const url = 'mongodb://localhost:27017';
+//const url = 'mongodb://172.18.200.11:27017';
 const dbName = 'azmoon';
 //------------------------------------------------------------------------------
 app.use(function (req, res, next) {
