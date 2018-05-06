@@ -9,7 +9,7 @@
                             <mat-form-field style="width:80%;">
                                 <input matInput placeholder="نام کاربری" [formControl]="username" autocomplete="off" style="direction:ltr;text-align:center;">
                                 <mat-icon matSuffix>
-                                    <i class="fas fa-user" style="color:gray"></i>
+                                    <i class="material-icons" style="color:gray">account_circle</i>
                                 </mat-icon>
                                 <mat-error align="right" *ngIf="username.invalid">{{getErrorMessage(username)}}</mat-error>
                             </mat-form-field>
@@ -18,7 +18,7 @@
                             <mat-form-field style="width:80%;">
                                 <input type="password" matInput placeholder="رمز عبور" [formControl]="password" autocomplete="off" style="text-align:center;">
                                 <mat-icon matSuffix>
-                                    <i class="fas fa-key" style="color:gray"></i>
+                                    <i class="material-icons" style="color:gray">lock</i>
                                 </mat-icon>
                                 <mat-error align="right" *ngIf="password.invalid">{{getErrorMessage(password)}}</mat-error>
                             </mat-form-field>

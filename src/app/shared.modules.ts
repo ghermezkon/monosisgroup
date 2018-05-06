@@ -21,26 +21,25 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @NgModule({
     imports: [
-        FormsModule, ReactiveFormsModule, MatStepperModule, MatExpansionModule,MatSnackBarModule,MatProgressSpinnerModule,
+        FormsModule, ReactiveFormsModule, MatStepperModule, MatExpansionModule,MatBottomSheetModule,MatSnackBarModule,
         MatSidenavModule, MatToolbarModule, MatButtonModule, MatTabsModule, MatRadioModule,
         MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDialogModule,
         MatAutocompleteModule, MatIconModule, MatTableModule, MatPaginatorModule, MatSortModule,
-        MatCardModule, MatMenuModule, MatChipsModule, MatListModule, MatGridListModule, MatProgressBarModule
+        MatCardModule, MatMenuModule, MatChipsModule, MatListModule, MatGridListModule, 
     ],
     exports: [
-        FormsModule, ReactiveFormsModule, MatStepperModule, MatExpansionModule,MatSnackBarModule,MatProgressSpinnerModule,
+        FormsModule, ReactiveFormsModule, MatStepperModule, MatExpansionModule,MatBottomSheetModule,MatSnackBarModule,
         MatSidenavModule, MatToolbarModule, MatButtonModule, MatTabsModule, MatRadioModule,
         MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDialogModule,
         MatAutocompleteModule, MatIconModule, MatTableModule, MatPaginatorModule, MatSortModule,
-        MatCardModule, MatMenuModule, MatChipsModule, MatListModule, MatGridListModule, MatProgressBarModule
+        MatCardModule, MatMenuModule, MatChipsModule, MatListModule, MatGridListModule, 
     ]
 })
 export class SharedModule {

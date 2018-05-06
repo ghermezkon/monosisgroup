@@ -8,8 +8,8 @@ import { ListAzmoonDetailComponent } from "./list.azmoon.detail.component";
 import { FormGroup, FormBuilder, Validators, AbstractControlDirective, AbstractControl, FormControl, FormArray } from "@angular/forms";
 import { Lesson } from "../../classes/public.class";
 
-import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
+import { take } from "rxjs/operators";
 
 @Component({
     selector: 'list-azmoon-component',
@@ -79,7 +79,7 @@ export class ListAzmoonComponent {
         })
     }
     studyChange(event) {
-        this._http.get_lesson_by_study(event.value).take(1).subscribe((res: any) => {
+        this._http.get_lesson_by_study(event.value).pipe(take(1)).subscribe((res: any) => {
             this.lesson_list = res;
         })
     }
@@ -122,7 +122,7 @@ export class ListAzmoonComponent {
     //-------------------------------------------------------------------------------
     search() {
         if (this.teacher_select) {
-            this._http.get_all_exam_by_teacher_name(this.teacher_select).take(1).subscribe((res: any) => {
+            this._http.get_all_exam_by_teacher_name(this.teacher_select).pipe(take(1)).subscribe((res: any) => {
                 if (res.length > 0) {
                     this.data_list = res;
                     this.dataSource.data = this.data_list;
@@ -130,6 +130,7 @@ export class ListAzmoonComponent {
                 } else {
                     this._msg.getMessage('notExistRecord');
                     this.show_exam_list = false;
+                    this.show_exam_detail = false;
                 }
             })
         }
@@ -152,7 +153,7 @@ export class ListAzmoonComponent {
             last_update_short: value.last_update_short,
         });
         this.study_list = _.find(this.teacher_list, { teacher_name: value.exam_teacher }, function (o) { return o; }).teacher_study;
-        this._http.get_lesson_by_study(value.exam_study).take(1).subscribe((res: any) => {
+        this._http.get_lesson_by_study(value.exam_study).pipe(take(1)).subscribe((res: any) => {
             this.lesson_list = res;
         });
         this.question_list = value.exam_questions;
@@ -275,7 +276,7 @@ export class ListAzmoonComponent {
                     this.question_list[i].answerThree_text, this.question_list[i].answerThree_image,
                     this.question_list[i].answerFour_text, this.question_list[i].answerFour_image));
         }
-        this._http.exam_validate_for_update(this.dataForm.get('_id').value,this.dataForm.get('exam_name').value).take(1).subscribe((res: any) => {
+        this._http.exam_validate_for_update(this.dataForm.get('_id').value,this.dataForm.get('exam_name').value).pipe(take(1)).subscribe((res: any) => {
             if (res.length > 0) {
                 this._msg.getMessage('doubleRecord');
             } else {
@@ -290,7 +291,7 @@ export class ListAzmoonComponent {
                     lesson_pic: lesson.lesson_pic
                 })
                 if (value == 'admin') this.dataForm.get('isAdmin').setValue(true);
-                this._http.update_exam(this.dataForm.value).take(1).subscribe((json: any) => {
+                this._http.update_exam(this.dataForm.value).pipe(take(1)).subscribe((json: any) => {
                     if (json.nModified >= 1) {
                         this._msg.getMessage('okUpdate');
                     } else {

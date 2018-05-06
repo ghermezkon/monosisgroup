@@ -1,10 +1,22 @@
-:host /deep/ .col-lesson-code{
-    text-align:center;
+.mat-column-select{
+    width:5%;
+    padding-right:10px;
 }
 .mat-column-lesson_code{
-    max-width:30%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    max-width:15%;
 }
-:host /deep/ .col-lesson-name{
-    text-align:center;
-    width:70%;
+.mat-column-study-study_name{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    min-width:30%;
+}
+.mat-column-lesson_name{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    min-width:40%;
 }

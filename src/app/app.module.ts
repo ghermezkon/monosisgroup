@@ -5,9 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared.modules';
-import { NgProgressModule } from '@ngx-progressbar/core';
-import { NgProgressHttpModule } from '@ngx-progressbar/http';
-import { NgProgressRouterModule } from '@ngx-progressbar/router';
 
 import { AppComponent } from './app.component';
 import { MatPaginatorIntl, MatStepperIntl } from '@angular/material';
@@ -21,27 +18,29 @@ import { ConfirmDialogComponent } from './util/confirm.dialog';
 import { StepperLabel } from './util/stepper.label';
 import { AuthService } from './http.service/AuthService';
 import { AuthGuard } from './http.service/AuthGuard';
+import { InitialMenuBottom } from './main.page/initial.menu.bottom';
+import { ExamMenuBottom } from './main.page/exam.menu.bottom';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoaderComponent } from './component/loader.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoaderInterceptor } from './http.service/loader.interceptor';
 
 @NgModule({
   imports: [
     BrowserModule.withServerTransition({ appId: 'monosisgroup' }),
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    NgProgressModule.forRoot(),
-    NgProgressRouterModule,
-    NgProgressHttpModule,
     SharedModule,
     AppRoutingModule,
   ],
   declarations: [
-    AppComponent, MessageDialogComponent, ConfirmDialogComponent
+    AppComponent, MessageDialogComponent, ConfirmDialogComponent, InitialMenuBottom, ExamMenuBottom, LoaderComponent
   ],
-  entryComponents: [MessageDialogComponent, ConfirmDialogComponent],
+  entryComponents: [MessageDialogComponent, ConfirmDialogComponent, InitialMenuBottom, ExamMenuBottom],
   providers: [
-    PagerService, PersianCalendarService, MessageService, GlobalHttpService,
     { provide: MatPaginatorIntl, useClass: PaginatorLabel },
     { provide: MatStepperIntl, useClass: StepperLabel },
-    AuthService, AuthGuard
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }    
   ],
   bootstrap: [AppComponent]
 })

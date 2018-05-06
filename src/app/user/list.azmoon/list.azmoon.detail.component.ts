@@ -171,7 +171,7 @@ export class ListAzmoonDetailComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 0) {
+            if (self.stepper.selectedIndex == 0) {
                 self.answerOne.get('answer_image').setValue(reader.result);
                 self.answerOne.get('answer_text').setValue(' ');
 
@@ -195,7 +195,7 @@ export class ListAzmoonDetailComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 1) {
+            if (self.stepper.selectedIndex == 1) {
                 self.answerTwo.get('answer_image').setValue(reader.result);
                 self.answerTwo.get('answer_text').setValue(' ');
                 var canvas: any = document.getElementById("canvasTwo_" + self.question_number);
@@ -218,7 +218,7 @@ export class ListAzmoonDetailComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 2) {
+            if (self.stepper.selectedIndex == 2) {
                 self.answerThree.get('answer_image').setValue(reader.result);
                 self.answerThree.get('answer_text').setValue(' ');
                 var canvas: any = document.getElementById("canvasThree_" + self.question_number);
@@ -241,7 +241,7 @@ export class ListAzmoonDetailComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 3) {
+            if (self.stepper.selectedIndex == 3) {
                 self.answerFour.get('answer_image').setValue(reader.result);
                 self.answerFour.get('answer_text').setValue(' ');
                 var canvas: any = document.getElementById("canvasFour_" + self.question_number);

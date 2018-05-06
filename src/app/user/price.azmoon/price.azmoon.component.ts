@@ -1,5 +1,4 @@
 import { Component, ViewChild } from "@angular/core";
-import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import { FormGroup, FormBuilder, Validators, AbstractControlDirective, AbstractControl } from "@angular/forms";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
@@ -7,6 +6,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { MessageService } from "../../util/message.service";
 import { PersianCalendarService } from "../../util/persian.calendar.service";
 import { GlobalHttpService } from "../../http.service/global.http.service";
+import { take } from "rxjs/operators";
 
 @Component({
     selector: 'price-azmoon-component',
@@ -33,7 +33,7 @@ export class PriceAzmoonComponent {
     @ViewChild(MatSort) sort: MatSort;
     selectedRowIndex: number = -1;
     index: number = -1;
-    displayedColumns = ['select', 'exam_code', 'exam_name', 'exam_study', 'exam_level',
+    displayedColumns = ['select', 'exam_name', 'exam_study', 'exam_level',
         'exam_lesson', 'last_update_long', 'exam_price', 'operate'];
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(false, []);
@@ -65,10 +65,16 @@ export class PriceAzmoonComponent {
     //------------------------------------------------------
     search() {
         if (this.teacher_select) {
-            this._http.get_all_exam_by_teacher_name(this.teacher_select).take(1).subscribe((res: any) => {
-                this.data_list = res;
-                this.dataSource.data = this.data_list;
-                this.show_exam_list = true;
+            this._http.get_all_exam_by_teacher_name(this.teacher_select).pipe(take(1)).subscribe((res: any) => {
+                if (res.length > 0) {
+                    this.data_list = res;
+                    this.dataSource.data = this.data_list;
+                    this.show_exam_list = true;
+                } else {
+                    this._msg.getMessage('notExistRecord');
+                    this.show_exam_list = false;
+                    this.show_exam_detail = false;
+                }
             })
         }
     }
@@ -80,19 +86,19 @@ export class PriceAzmoonComponent {
     }
     //------------------------------------------------------
     selectRow(event) {
-        this.selectedRowIndex = event.exam_code;
+        this.selectedRowIndex = event._id;
         this.index = this.data_list.indexOf(event);
         this.selection.toggle(event);
     }
     //------------------------------------------------------
     update() {
-        let list = [...this.data_list];        
+        let list = [...this.data_list];
         this.data.exam_price = +this.price;
         this.data.last_update_short = this.farsiDate_short;
         this.data.last_update_long = this.farsiDate_long;
         this.data.isEnable = true;
 
-        this._http.update_exam(this.data).take(1).subscribe((json: any) => {
+        this._http.update_exam(this.data).pipe(take(1)).subscribe((json: any) => {
             if (json.nModified >= 1) {
                 this._msg.getMessage('okUpdate');
                 this.show_exam_detail = false;

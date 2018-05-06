@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { GlobalHttpService } from './global.http.service';
 
 import * as moment from "moment";
+import { BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService {
     private loggedIn = new BehaviorSubject<boolean>(false);
     private loginError = new BehaviorSubject<string>('');
@@ -21,7 +23,7 @@ export class AuthService {
     }
     //------------------------------------------------------
     login(username?: any, password?: any) {
-        this._http.get_teacher_for_login(username, password).take(1).subscribe((res: any) => {
+        this._http.get_teacher_for_login(username, password).pipe(take(1)).subscribe((res: any) => {
             if (res == 'Unauthorized') {
                 this.loggedIn.next(false);
                 this.loginError.next('نام کاربری یا رمز عبور اشتباه است');
@@ -35,10 +37,10 @@ export class AuthService {
             }
         })
     }
-    public checkLoginStatus(){
+    public checkLoginStatus() {
         return moment().isBefore(this.getExpiration());
     }
-    public checkLogoutStatus(){
+    public checkLogoutStatus() {
         return !this.checkLoginStatus();
     }
     //------------------------------------------------------
@@ -53,5 +55,5 @@ export class AuthService {
         const expiration = localStorage.getItem("expires_at");
         const expiresAt = JSON.parse(expiration);
         return moment(expiresAt);
-    } 
+    }
 }

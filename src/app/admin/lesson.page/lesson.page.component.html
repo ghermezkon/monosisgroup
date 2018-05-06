@@ -59,8 +59,8 @@
                 </div>
                 <mat-table #datagrid [dataSource]="dataSource" matSort>
                   <ng-container matColumnDef="select">
-                    <mat-header-cell *matHeaderCellDef class="col-select"> </mat-header-cell>
-                    <mat-cell class="col-select" *matCellDef="let row">
+                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                    <mat-cell *matCellDef="let row">
                       <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
                       </mat-checkbox>
                     </mat-cell>
@@ -68,17 +68,17 @@
 
                   <ng-container matColumnDef="lesson_code">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> کد درس </mat-header-cell>
-                    <mat-cell class="col-lesson-code" *matCellDef="let element"> {{element.lesson_code}} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{element.lesson_code}} </mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="lesson_name">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> نام درس </mat-header-cell>
-                    <mat-cell class="col-lesson-name" *matCellDef="let element"> {{element.lesson_name}} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{element.lesson_name}} </mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="study.study_name">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> مقطع تحصیلی </mat-header-cell>
-                    <mat-cell class="col-study-name" *matCellDef="let element"> {{element.study.study_name}} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{element.study.study_name}} </mat-cell>
                   </ng-container>
 
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -103,7 +103,7 @@
               <button mat-raised-button ripple color="primary" *ngIf="!state_save" [disabled]="!dataForm.valid" (click)="update(dataForm.value)"
                 type="button">ویرایش اطلاعات</button>
               <button mat-icon-button ripple color="primary" type="reset" (click)="resetForm()" title="پاک کردن صفحه">
-                <i class="fas fa-sync fa-lg"></i>
+                  <i class="material-icons" style="font-size:2em;font-weight:bold;">loop</i>
               </button>
             </div>
           </div>

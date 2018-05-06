@@ -2,11 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControlDirective, AbstractControl, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
-import { startWith } from 'rxjs/operators/startWith';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import * as _ from 'lodash';
-import 'rxjs/add/operator/take';
 import { MessageService } from '../../util/message.service';
 import { PersianCalendarService } from '../../util/persian.calendar.service';
 import { GlobalHttpService } from '../../http.service/global.http.service';
@@ -95,7 +92,7 @@ export class NewDefineAzmoonComponent {
         this.study_list = _.find(this.teacher_list, { teacher_name: event.value }, function (o) { return o; }).teacher_study;
     }
     studyChange(event) {
-        this._http.get_lesson_by_study(event.value).take(1).subscribe((res: any) => {
+        this._http.get_lesson_by_study(event.value).pipe(take(1)).subscribe((res: any) => {
             this.lesson_list = res;
         })
     }
@@ -201,7 +198,7 @@ export class NewDefineAzmoonComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 0) {
+            if (self.stepper.selectedIndex == 0) {
                 self.answerOne.get('answer_image').setValue(reader.result);
                 if (self.answerOne.get('answer_text').value == null)
                     self.answerOne.get('answer_text').setValue(' ');
@@ -225,7 +222,7 @@ export class NewDefineAzmoonComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 1) {
+            if (self.stepper.selectedIndex == 1) {
                 self.answerTwo.get('answer_image').setValue(reader.result);
                 if (self.answerTwo.get('answer_text').value == null)
                     self.answerTwo.get('answer_text').setValue(' ');
@@ -249,7 +246,7 @@ export class NewDefineAzmoonComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 2) {
+            if (self.stepper.selectedIndex == 2) {
                 self.answerThree.get('answer_image').setValue(reader.result);
                 if (self.answerThree.get('answer_text').value == null)
                     self.answerThree.get('answer_text').setValue(' ');
@@ -273,7 +270,7 @@ export class NewDefineAzmoonComponent {
         var self = this;
         reader.onload = function (e) {
             var img = new Image();
-            if (self.stepper._focusIndex == 3) {
+            if (self.stepper.selectedIndex == 3) {
                 self.answerFour.get('answer_image').setValue(reader.result);
                 if (self.answerFour.get('answer_text').value == null)
                     self.answerFour.get('answer_text').setValue(' ');
@@ -353,7 +350,7 @@ export class NewDefineAzmoonComponent {
     //-------------------------------------------------------------------------------
     save(data) {
         var has_error = false;
-        this._http.get_all_exam_by_axam_name(data.exam_name).take(1).subscribe((res: any) => {
+        this._http.get_all_exam_by_axam_name(data.exam_name).pipe(take(1)).subscribe((res: any) => {
             if (res.length > 0) {
                 has_error = true;
                 this._msg.getMessage('doubleRecord');
@@ -371,7 +368,7 @@ export class NewDefineAzmoonComponent {
                     data.exam_lesson_detail.lesson_code = lesson.lesson_code;
                     data.exam_lesson_detail.lesson_name = lesson.lesson_name;
                     data.exam_lesson_detail.lesson_pic = lesson.lesson_pic;
-                    this._http.save_exam(data).take(1).subscribe((json: any) => {
+                    this._http.save_exam(data).pipe(take(1)).subscribe((json: any) => {
                         if (json.result.n >= 1) {
                             this._msg.getMessage('okSave');
                             this.data_list = [];

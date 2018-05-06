@@ -1,11 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpErrorResponse } from "@angular/common/http";
-import { ReplaySubject } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { catchError, retry } from 'rxjs/operators';
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class GlobalHttpService {
     azmoon_base: any = 'api/azmoon_base';
     azmoon_exam: any = 'api/azmoon_exam';
@@ -67,7 +65,7 @@ export class GlobalHttpService {
     get_teacher_for_login(username, password) {
         return this.http.get(this.url_login + '/' + username + '/' + password + '/login');
     }
-    save_teacher(data?: any) { 
+    save_teacher(data?: any) {
         return this.http.post(this.url_teacher, data, { headers: this.headers });
     }
     update_teacher(data?: any) {

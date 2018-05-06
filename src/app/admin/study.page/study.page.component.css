@@ -1,10 +1,16 @@
-:host /deep/ .col-study-code{
-    text-align:center;
+.mat-column-select{
+    width:10%;
+    padding-right:10px;
 }
 .mat-column-study_code{
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:30%;
 }
-:host /deep/ .col-study-name{
-    text-align:center;
-    width:70%;
+.mat-column-study_name{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    min-width:60%;
 }

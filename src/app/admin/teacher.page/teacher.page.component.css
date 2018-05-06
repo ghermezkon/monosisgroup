@@ -1,24 +1,43 @@
 :host /deep/ mat-header-cell.mat-column-select, .mat-column-select{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:4% !important;
+    padding-right:10px;
 }
 :host /deep/ mat-header-cell.mat-column-teacher_code, .mat-column-teacher_code{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:8% !important;
 }
 :host /deep/ mat-header-cell.mat-column-teacher_name, .mat-column-teacher_name{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:20% !important;
 }
 :host /deep/ mat-header-cell.mat-column-teacher_school, .mat-column-teacher_school{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:50% !important;
 }
 :host /deep/ mat-header-cell.mat-column-teacher_study, .mat-column-teacher_study{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:20% !important;
 }
 :host /deep/ mat-header-cell.mat-column-teacher_username, .mat-column-teacher_username{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:10% !important;
 }

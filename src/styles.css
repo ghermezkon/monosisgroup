@@ -13,7 +13,9 @@
 *:after {
   box-sizing: inherit;
 }
-
+::-webkit-scrollbar {
+  display: none;
+  }
 html {
   box-sizing: border-box;
 }
@@ -66,6 +68,7 @@ button,
 .ui.horizontal.divider.header,
 .ui-datatable-thead,
 .ui-datatable-tablewrapper,
+.mat-form-field,.mat-list-item,
 h2, h3 {
   font-family: IRANSans_normal !important;
   font-weight: normal !important;

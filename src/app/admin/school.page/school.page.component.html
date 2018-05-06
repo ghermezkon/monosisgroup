@@ -77,26 +77,26 @@
                                 </div>
                                 <mat-table #datagrid [dataSource]="dataSource" matSort>
                                     <ng-container matColumnDef="select">
-                                        <mat-header-cell *matHeaderCellDef class="col-select"> </mat-header-cell>
-                                        <mat-cell class="col-select" *matCellDef="let row">
+                                        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                        <mat-cell *matCellDef="let row">
                                             <mat-checkbox (click)="selectRow(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
                                             </mat-checkbox>
                                         </mat-cell>
-                                    </ng-container>
+                                    </ng-container> 
 
                                     <ng-container matColumnDef="school_code">
                                         <mat-header-cell *matHeaderCellDef mat-sort-header> کد مدرسه </mat-header-cell>
-                                        <mat-cell class="col-school-code" *matCellDef="let element"> {{element.school_code}} </mat-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.school_code}} </mat-cell>
                                     </ng-container>
 
                                     <ng-container matColumnDef="school_name">
                                         <mat-header-cell *matHeaderCellDef mat-sort-header> نام مدرسه </mat-header-cell>
-                                        <mat-cell class="col-school-name" *matCellDef="let element"> {{element.school_name}} </mat-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.school_name}} </mat-cell>
                                     </ng-container>
 
                                     <ng-container matColumnDef="school_manager">
                                         <mat-header-cell *matHeaderCellDef mat-sort-header> مدیر مدرسه </mat-header-cell>
-                                        <mat-cell class="col-school-manager" *matCellDef="let element"> {{element.school_manager}} </mat-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.school_manager}} </mat-cell>
                                     </ng-container>
 
                                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -121,7 +121,7 @@
                             <button mat-raised-button ripple color="primary" *ngIf="!state_save" [disabled]="!dataForm.valid" (click)="update(dataForm.value)"
                                 type="button">ویرایش اطلاعات</button>
                             <button mat-icon-button ripple color="primary" type="reset" (click)="resetForm()" title="پاک کردن صفحه">
-                                <i class="fas fa-sync fa-lg"></i>
+                                <i class="material-icons" style="font-size:2em;font-weight:bold;">loop</i>
                             </button>
                         </div>
                     </div>

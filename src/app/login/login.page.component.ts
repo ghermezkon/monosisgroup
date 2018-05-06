@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { Validators, AbstractControlDirective, AbstractControl } from "@angular/forms";
 import { MessageService } from "../util/message.service";
 import { AuthService } from "../http.service/AuthService";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 @Component({
     selector: 'login-component',

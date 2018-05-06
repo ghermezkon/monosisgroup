@@ -1,33 +1,29 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Router, NavigationStart } from '@angular/router';
 import { AuthService } from './http.service/AuthService';
 import { Title } from '@angular/platform-browser';
-import { NgProgress} from '@ngx-progressbar/core';
-import { NgProgressRef } from '@ngx-progressbar/core';
+import { Observable } from 'rxjs';
+import { LoaderService } from './http.service/LoaderService';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent {  
   isLoggedIn$: Observable<boolean>;
-  progressRef: NgProgressRef;
+  isLoader$:  Observable<boolean>;
   //------------------------------------------------------------------------------
-  constructor(private router: Router, private auth: AuthService, private title: Title, private ngProgress: NgProgress) {
+  constructor(private router: Router, private auth: AuthService, private title: Title, private _loader: LoaderService) {
     this.title.setTitle('گروه آموزشی مونوسیس');
   }
   //------------------------------------------------------------------------------
   ngOnInit() {
-    this.progressRef = this.ngProgress.ref();
     this.isLoggedIn$ = this.auth.isLoggedIn;
+    this.isLoader$ = this._loader.isLoader;
   }
   onLogout() {
     this.auth.logout();
-  }
-  ngOnDestroy() {
-    this.ngProgress.destroy();
   }
   //------------------------------------------------------------------------------
 }

@@ -11,19 +11,18 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: MainPageComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'school', loadChildren: 'app/admin/school.page/school-routing.module#SchoolModule', canLoad: [AuthGuard] },
-  { path: 'study', loadChildren: 'app/admin/study.page/study-routing.module#StudyModule', canLoad: [AuthGuard] },
-  { path: 'lesson', loadChildren: 'app/admin/lesson.page/lesson-routing.module#LessonModule', canLoad: [AuthGuard] },
-  { path: 'teacher', loadChildren: 'app/admin/teacher.page/teacher-routing.module#TeacherModule', canLoad: [AuthGuard]},
-  { path: 'define.azmoon', loadChildren: 'app/user/define.azmoon/define.azmoon-routing.module#DefineAzmoonModule', canLoad: [AuthGuard] },
-  { path: 'list.azmoon', loadChildren: 'app/user/list.azmoon/list.azmoon-routing.module#ListAzmoonModule', canLoad: [AuthGuard] },
-  { path: 'price.azmoon', loadChildren: 'app/user/price.azmoon/price.azmoon-routing.module#PriceAzmoonModule', canLoad: [AuthGuard] },
+  { path: 'school', loadChildren: 'app/admin/school.page/school-routing.module#SchoolModule', canActivate: [AuthGuard] },
+  { path: 'study', loadChildren: 'app/admin/study.page/study-routing.module#StudyModule', canActivate: [AuthGuard] },
+  { path: 'lesson', loadChildren: 'app/admin/lesson.page/lesson-routing.module#LessonModule', canActivate: [AuthGuard] },
+  { path: 'teacher', loadChildren: 'app/admin/teacher.page/teacher-routing.module#TeacherModule', canActivate: [AuthGuard] },
+  { path: 'define.azmoon', loadChildren: 'app/user/define.azmoon/define.azmoon-routing.module#DefineAzmoonModule', canActivate: [AuthGuard] },
+  { path: 'list.azmoon', loadChildren: 'app/user/list.azmoon/list.azmoon-routing.module#ListAzmoonModule', canActivate: [AuthGuard] },
+  { path: 'price.azmoon', loadChildren: 'app/user/price.azmoon/price.azmoon-routing.module#PriceAzmoonModule', canActivate: [AuthGuard] },
 ];
 
 @NgModule({
   imports: [CommonModule, SharedModule, RouterModule.forRoot(routes)],
   declarations: [MainPageComponent, LoginComponent, HighlightDirective],
   exports: [RouterModule],
-  providers: []
 })
 export class AppRoutingModule { }

@@ -2,29 +2,12 @@
     <div class="row">
         <div class="ui container stacked segment" style="background-color:#ECEFF1">
             <div class="ui container grid centered">
-                <mat-menu #appMenu="matMenu" yPosition="below">
-                    <ng-template matMenuContent>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/school'"> تعریف مدارس </button>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/study'"> تعریف مقاطع تحصیلی </button>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/lesson'"> تعریف دروس </button>
-                        <div class="ui divider" style="padding:0;margin:0;"></div>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/teacher'"> تعریف آموزگار </button>
-                    </ng-template>
-                </mat-menu>
-                <mat-menu #examMenu="matMenu" yPosition="below">
-                    <ng-template matMenuContent>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/define.azmoon'"> تعریف آزمون جدید </button>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/price.azmoon'"> تعیین قیمت آزمون ها </button>
-                        <div class="ui divider" style="padding:0;margin:0;"></div>
-                        <button mat-menu-item style="direction:rtl;text-align:right;" [routerLink]="'/list.azmoon'"> لیست آزمون ها </button>
-                    </ng-template>
-                </mat-menu>
                 <div class="four wide column">
-                    <mat-card [appHighlight]="'#1565C0'" defaultColor="#303F9F" [matMenuTriggerFor]="appMenu" class="card-corner">
+                    <mat-card [appHighlight]="'#1565C0'" defaultColor="#303F9F" (click)="initialMenu()" class="card-corner">
                         <mat-card-content>
                             <div class="ui grid container">
                                 <div class="sixteen wide column center aligned" style="padding-top:0px;">
-                                    <i class="fas fa-cogs fa-4x" aria-hidden="true"></i>
+                                    <i class="material-icons" style="font-size:5.0rem">build</i>
                                 </div>
                                 <div class="sixteen wide column center aligned" style="padding-top:0px;font-size:15px;">
                                     تعاریف اولیه
@@ -37,11 +20,11 @@
                     </mat-card>
                 </div>
                 <div class="four wide column">
-                    <mat-card [appHighlight]="'#1565C0'" defaultColor="#303F9F" [matMenuTriggerFor]="examMenu" class="card-corner">
+                    <mat-card [appHighlight]="'#1565C0'" defaultColor="#303F9F" (click)="examMenu()" class="card-corner">
                         <mat-card-content>
                             <div class="ui grid container">
                                 <div class="sixteen wide column center aligned" style="padding-top:0px;">
-                                    <i class="fas fa-th fa-4x" aria-hidden="true"></i>
+                                    <i class="material-icons" style="font-size:5.0rem">view_comfy</i>
                                 </div>
                                 <div class="sixteen wide column center aligned" style="padding-top:0px;font-size:15px;">
                                     آزمون

@@ -2,15 +2,13 @@ import { Component, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, AbstractControlDirective, AbstractControl } from "@angular/forms";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { map } from "rxjs/operators";
-import 'rxjs/add/operator/take';
-import 'rxjs/add/observable/forkJoin';
+import { map, take } from "rxjs/operators";
 import * as _ from 'lodash';
 import { SelectionModel } from "@angular/cdk/collections";
 import { MessageService } from "../../util/message.service";
 import { PersianCalendarService } from "../../util/persian.calendar.service";
 import { GlobalHttpService } from "../../http.service/global.http.service";
-import { Observable } from "rxjs/Observable";
+import { forkJoin } from "rxjs";
 
 @Component({
     selector: 'teacher-component',
@@ -52,7 +50,8 @@ export class TeacherPageComponent {
         this.date_message = "تاریخ ذخیره سازی : " + this.farsiDate_long;
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
         this.route.data.pipe(
-            map((data) => data['azmoon_teacher'])).take(1).subscribe((azmoon_teacher) => {
+            map((data) => data['azmoon_teacher']),
+            take(1)).subscribe((azmoon_teacher) => {
                 if (azmoon_teacher.length > 0) {
                     this.data_list = azmoon_teacher;
                     this.dataSource.data = this.data_list;
@@ -64,11 +63,11 @@ export class TeacherPageComponent {
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++                
         this.teacher_sex_list = this._msg.getTeacherSexType();
         this.role_list = this._msg.getRole();
-        Observable.forkJoin(
+        forkJoin(
             [
                 this._http.get_all_study(),
                 this._http.get_all_school()
-            ]).take(1).subscribe((res: any) => {
+            ]).pipe(take(1)).subscribe((res: any) => {
                 if (res[0].length > 0) {
                     this.study_list = res[0];
                 }
@@ -149,7 +148,7 @@ export class TeacherPageComponent {
             data.last_update_short = this.farsiDate_short;
             data.last_update_long = this.farsiDate_long;
             data.teacher_pic = this.imgSrc;
-            this._http.save_teacher(data).take(1).subscribe((json: any) => {
+            this._http.save_teacher(data).pipe(take(1)).subscribe((json: any) => {
                 if (json.result.n >= 1) {
                     this._msg.getMessage('okSave');
 
@@ -183,7 +182,7 @@ export class TeacherPageComponent {
             this._msg.getMessage('doubleRecord');
             return;
         } else {
-            this._http.update_teacher(data).take(1).subscribe((json: any) => {
+            this._http.update_teacher(data).pipe(take(1)).subscribe((json: any) => {
                 if (json.nModified >= 1) {
                     this._msg.getMessage('okUpdate');
 

@@ -11,7 +11,6 @@ import { NewDefineAzmoonComponent } from "./new.define.azmoon.component";
             {
                 path: '', component: NewDefineAzmoonComponent
             },
-        ])],
-    providers: []
+        ])]
 })
 export class DefineAzmoonModule { }

@@ -1,36 +1,65 @@
 :host /deep/ mat-header-cell.mat-column-select, .mat-column-select{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:4% !important;
+    padding-right:10px;
 }
 :host /deep/ mat-header-cell.mat-column-exam_code, .mat-column-exam_code{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:7% !important;
 }
 :host /deep/ mat-header-cell.mat-column-exam_name, .mat-column-exam_name{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:50% !important;
 }
 :host /deep/ mat-header-cell.mat-column-exam_study, .mat-column-exam_study{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:30% !important;
 }
 :host /deep/ mat-header-cell.mat-column-exam_level, .mat-column-exam_level{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:10% !important;
 }
 :host /deep/ mat-header-cell.mat-column-exam_lesson, .mat-column-exam_lesson{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     width:10% !important;
 }
 :host /deep/ mat-header-cell.mat-column-last_update_long, .mat-column-last_update_long{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     width:30% !important;
 }
 :host /deep/ mat-header-cell.mat-column-exam_price, .mat-column-exam_price{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     width:20% !important;
 }
 :host /deep/ mat-header-cell.mat-column-operate, .mat-column-operate{
     text-align:center !important;
+    display:flex;
+    align-items: center;
+    justify-content: center;
     max-width:4% !important;
+    padding-left:5em;
 }

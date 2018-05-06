@@ -40,10 +40,6 @@
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="exam_code">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> کد آزمون </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.exam_code}} </mat-cell>
-                        </ng-container>
                         <ng-container matColumnDef="exam_name">
                             <mat-header-cell *matHeaderCellDef mat-sort-header> نام آزمون </mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.exam_name}} </mat-cell>
@@ -72,12 +68,12 @@
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             <mat-cell *matCellDef="let row">
                                 <button mat-icon-button color="warn" (click)="show_detail(row)">
-                                    <i class="fa fa-edit fa-2x"></i>
+                                    <i class="material-icons" style="font-size:2.0rem">visibility</i>
                                 </button>
                             </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'row-select': selectedRowIndex == row.exam_code}" (click)="selectRow(row)"></mat-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'row-select': selectedRowIndex == row._id}" (click)="selectRow(row)"></mat-row>
                     </mat-table>
                     <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
                     </mat-paginator>

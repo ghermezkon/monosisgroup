@@ -2,14 +2,13 @@ import { Component, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, AbstractControlDirective, AbstractControl } from "@angular/forms";
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { map } from "rxjs/operators";
-import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import { SelectionModel } from "@angular/cdk/collections";
 import { MessageService } from "../../util/message.service";
 import { PersianCalendarService } from "../../util/persian.calendar.service";
 import { GlobalHttpService } from "../../http.service/global.http.service";
 import { Study } from "../../classes/public.class";
+import { map, take } from "rxjs/operators";
 
 @Component({
     selector: 'lesson-component',
@@ -46,9 +45,10 @@ export class LessonPageComponent {
         this.farsiDate_short = this.persianCalendarService.PersianCalendarShort(this.today);
         this.farsiDate_long = this.persianCalendarService.PersianCalendar(this.today);
         this.date_message = "تاریخ ذخیره سازی : " + this.farsiDate_long;
-        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++       
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         this.route.data.pipe(
-            map((data) => data['azmoon_study'])).take(1).subscribe((azmoon_study) => {
+            map((data) => data['azmoon_study']),
+            take(1)).subscribe((azmoon_study) => {
                 if (azmoon_study.length > 0) {
                     this.study_list = azmoon_study;
                     this.resetForm();
@@ -92,8 +92,8 @@ export class LessonPageComponent {
         if (event.value) {
             let study = _.find(this.study_list, { study_name: event.value }, function (o) { return o; });
             this.dataForm.get('study').patchValue(study);
-            
-            this._http.get_lesson_by_study(event.value).take(1).subscribe((res: any) => {
+
+            this._http.get_lesson_by_study(event.value).pipe(take(1)).subscribe((res: any) => {
                 this.data_list = res;
                 this.dataSource.data = this.data_list;
             })
@@ -134,7 +134,7 @@ export class LessonPageComponent {
             data.last_update_short = this.farsiDate_short;
             data.last_update_long = this.farsiDate_long;
             data.lesson_pic = this.imgSrc;
-            this._http.save_lesson(data).take(1).subscribe((json: any) => {
+            this._http.save_lesson(data).pipe(take(1)).subscribe((json: any) => {
                 if (json.result.n >= 1) {
                     this._msg.getMessage('okSave');
 
@@ -167,7 +167,7 @@ export class LessonPageComponent {
             this._msg.getMessage('doubleRecord');
             return;
         } else {
-            this._http.update_school(data).take(1).subscribe((json: any) => {
+            this._http.update_school(data).pipe(take(1)).subscribe((json: any) => {
                 if (json.nModified >= 1) {
                     this._msg.getMessage('okUpdate');
 
@@ -188,7 +188,7 @@ export class LessonPageComponent {
         this.selectedRowIndex = event.lesson_code;
         this.index = this.data_list.indexOf(event);
         this.dataForm.patchValue(event);
-        if(event.lesson_pic == null)
+        if (event.lesson_pic == null)
             this.imgSrc = './assets/images/empty.webp';
         else
             this.imgSrc = event.lesson_pic;

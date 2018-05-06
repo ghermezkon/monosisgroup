@@ -1,14 +1,18 @@
-:host /deep/ .col-school-code{
-    text-align:center;
+.mat-column-school_code,.mat-column-school_manager,.mat-column-school_name {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.mat-column-select{
+    width:10%;
+    padding-right:10px;
 }
 .mat-column-school_code{
-    max-width:20%;
+    width:20%;
 }
-:host /deep/ .col-school-name{
-    text-align:center;
-    width:40%;
+.mat-column-school_manager{
+    min-width:20%;
 }
-:host /deep/ .col-school-manager{
-    text-align:center;
-    width:40%;
+.mat-column-school_name{
+    min-width:40%;
 }
