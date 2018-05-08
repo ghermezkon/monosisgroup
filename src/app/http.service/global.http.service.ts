@@ -11,6 +11,7 @@ export class GlobalHttpService {
     //-------------------------------------------------------------------------
     headers: any;
     url_date: any = environment.apiEndPoint + '/api/currentDate';
+    url_payment: any = environment.apiEndPoint + '/api/payment';
     url_login: any = environment.apiEndPoint + this.azmoon_login + '/login';
     url_school: any = environment.apiEndPoint + this.azmoon_base + '/school';
     url_study: any = environment.apiEndPoint + this.azmoon_base + '/study';
@@ -86,5 +87,8 @@ export class GlobalHttpService {
     }
     update_exam(data?: any) {
         return this.http.put(this.url_exam + '/exam', data, { headers: this.headers });
+    }
+    payment() {
+        return this.http.get(this.url_payment);
     }
 }   
