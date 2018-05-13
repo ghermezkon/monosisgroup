@@ -2,7 +2,8 @@ const
     express = require('express'),
     router = express.Router(),
     _objectId = require('mongodb').ObjectID,
-    Kavenegar = require('kavenegar');
+    Kavenegar = require('kavenegar'),
+    Request = require("request");
 require('./otp')
 require('./middleware')
 //--------------------------------------
@@ -253,5 +254,31 @@ router.post('/result_exam', (req, res) => {
         }
     });
 })
+router.post('/save_shekayat', (req, res) => {
+    var ip_address;
+    let urlEncodedData = 'secret=6LdGAy8UAAAAABjaPrCn-7skOHm49J849p0uBBPb&response=' + req.body.captchaResponse + '&remoteip=' + req.connection.remoteAddress;
+    ip_address = req.connection.remoteAddress;
+    Request.post({
+        "headers": { "Content-Type": "application/x-www-form-urlencoded" },
+        "url": "https://www.google.com/recaptcha/api/siteverify",
+        "body": urlEncodedData
+    }, (error, response, body) => {
+        if (error) {
+            res.send(err);
+        } else {
+            delete req.body.captchaResponse;
+            req.body.id_address = ip_address;
+            req.app.db.collection('azmoon_shekayat').insertOne(req.body, (err, data) => {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.status(200).json(data);
+                    res.end();
+                }
+            })
+        }
+    });
+
+});
 //---------------------------------------
 module.exports = router

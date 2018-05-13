@@ -11,7 +11,7 @@ export class GlobalHttpService {
     //-------------------------------------------------------------------------
     headers: any;
     url_date: any = environment.apiEndPoint + '/api/currentDate';
-    url_payment: any = environment.apiEndPoint + '/api/payment';
+    url_payment: any = environment.apiEndPoint + '/pardano';
     url_login: any = environment.apiEndPoint + this.azmoon_login + '/login';
     url_school: any = environment.apiEndPoint + this.azmoon_base + '/school';
     url_study: any = environment.apiEndPoint + this.azmoon_base + '/study';

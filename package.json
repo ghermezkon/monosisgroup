@@ -49,7 +49,8 @@
     "kavenegar": "^2.0.1",
     "moment": "^2.22.1",
     "mongodb": "^3.0.7",
-    "pardano": "^1.0.0",
+    "payir": "^1.0.0",
+    "request": "^2.85.0",
     "rxjs": "^6.1.0",
     "ts-loader": "^4.2.0",
     "zone.js": "^0.8.26"
