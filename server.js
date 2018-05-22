@@ -7,19 +7,18 @@ http = require('http'),
   helmet = require('helmet'),
   compression = require('compression'),
   cors = require('cors'),
-  Payir = require('payir'),
-  gateway = new Payir('test'),
-  mongoClient = require('mongodb').MongoClient;
+  mongoClient = require('mongodb').MongoClient,
+crypto = require('crypto'),
+  require('./mongo/middleware')
 //------------------------------------------------------------------------------
-const url = 'mongodb://localhost:27017';
-//const url = 'mongodb://172.18.200.11:27017';
+//const url = 'mongodb://localhost:27017';
+const url = 'mongodb://172.18.200.11:27017';
 const dbName = 'azmoon';
 //------------------------------------------------------------------------------
 app.use(function (req, res, next) {
-  res.header('Access-Control-Expose-Headers', 's-token')
+  res.header('Access-Control-Expose-Headers', 's-token, Authorization');
   next();
 });
-
 app
   .use(bodyParser.json({ limit: '50mb' }))
   .use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
@@ -43,23 +42,22 @@ var app_signup = require('./mongo/app.signup');
 app.get('/api/currentDate', (req, res) => {
   res.json(new Date());
 });
-app.get('/pardano', function (req, res) {
-  gateway.send(1000, 'http://localhost:5001/verify')
-    .then(link => res.redirect(link))
-    .catch(error => console.log(error));
-});
-app.post('/verify', (req, res) => {
-  // Pass POST Data Payload (Request Body) to verify transaction
-  gateway.verify(req.body)
-      .then(data => res.end('Payment was successful.'))
-      .catch(error => console.log(error));
-});
+//---------------------------------------------------------------
+app.all('/api/azmoon_app/*', [middleware.verifyToken], (req, res, next) => {
+  if (req.body.decode) {
+    next();
+  } else {
+    res.status(403).send({
+      message: 'No token provided.'
+    });
+  }
+})
 //---------------------------------------------------------------
 app.use('/api/azmoon_base', azmoon_base);
 app.use('/api/azmoon_exam', azmoon_exam);
 app.use('/api/azmoon_login', azmoon_login);
 app.use('/api/azmoon_app', azmoon_app);
-app.use('/api/azmoon_app', app_signup);
+app.use('/api/azmoon_app_signup', app_signup);
 //===============================================================
 const port = process.env.PORT || '5001';
 app.set('port', port);

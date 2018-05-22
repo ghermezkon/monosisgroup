@@ -26,18 +26,18 @@ middleware = {
     },
     hashPWD: function (req, res, next) {
         var hashing = new HASHING();
-        if(!req.body.flagUpdate){
+        if (!req.body.flagUpdate) {
             req.body.passwordHash = hashing.hashPassword(req.body.password);
             next();
         }
-        else{
+        else {
             req.body.passwordHash = req.body.passwordHash;
             next();
-        }        
-    },    
+        }
+    },
     sessionToken: function (data) {
         token_value = { user_id: data.insertedIds[0] }
-        return jwt.sign({token_value}, RSA_PRIVATE_KEY, {
+        return jwt.sign({ token_value }, RSA_PRIVATE_KEY, {
             algorithm: 'RS256',
             expiresIn: "7d",
             subject: JSON.stringify(token_value)
@@ -45,13 +45,23 @@ middleware = {
     },
     sessionTokenUpdate: function (data) {
         token_value = { user_id: data._id }
-        return jwt.sign({token_value}, RSA_PRIVATE_KEY, {
+        return jwt.sign({ token_value }, RSA_PRIVATE_KEY, {
             algorithm: 'RS256',
             expiresIn: "7d",
             subject: JSON.stringify(token_value)
         });
-    },    
-    verifyPassword: function(password, hash){
+    },
+    verifyToken: function (req, res, next) {
+        jwt.verify(req.get('Authorization'), RSA_PUBLIC_KEY, (err, res) => {
+            if (err) {
+                req.body.decode = false;
+            } else {
+                req.body.decode = true;
+            }
+        });
+        next();
+    },
+    verifyPassword: function (password, hash) {
         var hashing = new HASHING();
         return hashing.verfiyHash(password, hash);
     }

@@ -2,8 +2,10 @@ const
     tableDB = 'azmoon_app',
     express = require('express'),
     _objectId = require('mongodb').ObjectID,
+    Kavenegar = require('kavenegar'),
     router = express.Router();
 require('./middleware')
+require('./otp')
 //---------------------------------------
 router
     .post('/users', [middleware.hashPWD], (req, res) => {
@@ -13,7 +15,8 @@ router
                 res.send(err);
             } else {
                 const token = middleware.sessionToken(data);
-                res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+                //res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+                res.set('Authorization', token);
                 res.status(200).json(data);
                 res.end();
             }
@@ -30,7 +33,8 @@ router
                 res.send(err);
             } else {
                 const token = middleware.sessionTokenUpdate(data);
-                res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+                //res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+                res.set('Authorization', token);
                 res.status(200).json(data);
                 res.end();
             }
@@ -44,6 +48,8 @@ router
                     const check = middleware.verifyPassword(req.params.password, data[0].passwordHash);
                     if (check) {
                         //delete data[0].passwordHash;
+                        const token = middleware.sessionTokenUpdate(data[0]);
+                        res.set('Authorization', token);
                         res.send(data[0]).end();
                     } else {
                         res.send(false)
@@ -54,5 +60,31 @@ router
             }
         })
     })
+    .get('/mobile_in_use/:mobile', (req, res) => {
+        req.app.db.collection('azmoon_app').find({ $and: [{ isUser: true }, { 'user_info.mobile': req.params.mobile }] }).toArray((err, data) => {
+            if (data && data.length > 0) res.json(true);
+            else res.json(false);
+        })
+    })
+    .get('/generate_security_code/:mobile', [middleware.generate_secrity_code, middleware.hashing], (req, res) => {
+        if (req.body.scode == '000000') {
+            res.set('s-token', '000000');
+            res.json(false);
+        } else {
+            //res.set('s-token', req.body.hashcode);
+            res.set('s-token', req.body.scode);
+            res.json(true);
+        }
+    })
+    .get('/check_security_code/:code', (req, res) => {
+        // var hashing = new HASHING();    
+        // if(hashing.verfiyHash(req.params.code, req.headers['s-token'])){
+        //     res.json(true);
+        // }else{
+        //     res.json(false);
+        // }
+        res.json(true);
+    })
+    
 //---------------------------------------
 module.exports = router
