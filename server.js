@@ -1,4 +1,5 @@
-const express = require('express')
+const
+  express = require('express')
 http = require('http'),
   bodyParser = require('body-parser'),
   fs = require('fs'),
@@ -8,8 +9,11 @@ http = require('http'),
   compression = require('compression'),
   cors = require('cors'),
   mongoClient = require('mongodb').MongoClient,
-crypto = require('crypto'),
-  require('./mongo/middleware')
+  crypto = require('crypto'),
+  request = require("request");
+dateFormat = require('dateformat');
+require('./mongo/middleware')
+const RSA_PRIVATE_KEY = fs.readFileSync('./security/rsa.private');
 //------------------------------------------------------------------------------
 //const url = 'mongodb://localhost:27017';
 const url = 'mongodb://172.18.200.11:27017';
@@ -40,8 +44,49 @@ var azmoon_app = require('./mongo/azmoon.app');
 var app_signup = require('./mongo/app.signup');
 //---------------------------------------------------------------
 app.get('/api/currentDate', (req, res) => {
-  res.json(new Date());
+  let merchantCode = 4438263;
+  let terminalCode = 1615545;
+  let amount = 10000;
+  let redirectAddress = 'http://localhost:5001/api/verify';
+  let invoiceNumber = 1020;
+  let invoiceDate = '1397/02/30 12:43:21';
+  let action = 1003;
+  let timeStamp = dateFormat(new Date(), "yyyy/mm/dd, HH:mm:ss");
+
+  let data = "#" + merchantCode + "#" + terminalCode + "#" + invoiceNumber +
+    "#" + invoiceDate + "#" + amount + "#" + redirectAddress + "#" + action + "#" + timeStamp + "#";
+  //------------------------------------------------
+  const signer = crypto.createSign('SHA256');
+  signer.update(data);
+  let sign = signer.sign(RSA_PRIVATE_KEY, 'base64');
+  let t = {
+    'merchantCode': merchantCode,
+    'terminalCode': terminalCode,
+    'amount': amount,
+    'redirectAddress': redirectAddress,
+    'invoiceNumber': invoiceNumber,
+    'invoiceDate': invoiceDate,
+    'action': action,
+    'timeStamp': timeStamp,
+    'sign': sign
+  }
+  //------------------------------------------------
+  request.post({
+    "url": "https://pep.shaparak.ir/gateway.aspx",
+    "body": JSON.stringify(t)
+  }, (error, response, body) => {
+    if (error) {
+      //res.send(err);
+      console.log(error);
+    } else {
+      res.send(body)
+      //console.log(response);
+    }
+  });
 });
+app.get('/api/verify', (req, res) => {
+  console.log(res);
+})
 //---------------------------------------------------------------
 app.all('/api/azmoon_app/*', [middleware.verifyToken], (req, res, next) => {
   if (req.body.decode) {

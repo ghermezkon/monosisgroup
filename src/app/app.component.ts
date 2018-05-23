@@ -18,7 +18,6 @@ export class AppComponent {
   //------------------------------------------------------------------------------
   constructor(private router: Router, private auth: AuthService, private title: Title, private _loader: LoaderService, private _http: GlobalHttpService) {
     this.title.setTitle('گروه آموزشی مونوسیس');
-    //this.test();
   }
   //------------------------------------------------------------------------------
   ngOnInit() {

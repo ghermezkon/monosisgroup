@@ -145,15 +145,6 @@ router
                 res.json(data);
             })
     })
-    .get('/find_study_by_name/:name', (req, res) => {
-        req.app.db.collection('azmoon_base').find({
-            $and: [
-                { study_code: { $exists: true } },
-                { study_name: { $regex: req.params.name } }]
-        }).toArray((err, data) => {
-            res.json(data);
-        })
-    })
     .get('/find_student_exam_list/:id', (req, res) => {
         req.app.db.collection('azmoon_exam').aggregate([
             {
