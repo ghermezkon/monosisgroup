@@ -1,22 +1,25 @@
 const
-  express = require('express')
-http = require('http'),
+  express = require('express'),
+  http = require('http'),
   bodyParser = require('body-parser'),
-  fs = require('fs'),
   app = express(),
   jwt = require('jsonwebtoken'),
   helmet = require('helmet'),
   compression = require('compression'),
   cors = require('cors'),
   mongoClient = require('mongodb').MongoClient,
-  crypto = require('crypto'),
-  request = require("request");
-dateFormat = require('dateformat');
-require('./mongo/middleware')
-const RSA_PRIVATE_KEY = fs.readFileSync('./security/rsa.private');
+  soap = require('soap');
+require('./mongo/middleware');
 //------------------------------------------------------------------------------
-//const url = 'mongodb://localhost:27017';
-const url = 'mongodb://172.18.200.11:27017';
+const port = process.env.PORT || '5001';
+app.set('port', port);
+const server = http.createServer(app);
+server.listen(port, () => console.log(`API running on localhost:${port}`));
+var io = require('socket.io').listen(server);
+app.set('io', io);
+//------------------------------------------------------------------------------
+const url = 'mongodb://localhost:27017';
+//const url = 'mongodb://172.18.200.11:27017';
 const dbName = 'azmoon';
 //------------------------------------------------------------------------------
 app.use(function (req, res, next) {
@@ -26,67 +29,63 @@ app.use(function (req, res, next) {
 app
   .use(bodyParser.json({ limit: '50mb' }))
   .use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
-  .use(bodyParser.json())
   .use(compression())
   .use(helmet())
   .use(cors())
-//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------  
 mongoClient.connect(url, function (err, client) {
-  console.log("Connected successfully to server");
+  console.log("Connected successfully rverto server");
   const db = client.db(dbName);
   app.db = db;
 });
 //---------------------------------------------------------------
-var azmoon_base = require('./mongo/azmoon.base');
-var azmoon_exam = require('./mongo/azmoon.exam');
-var azmoon_login = require('./mongo/azmoon.login');
-var azmoon_app = require('./mongo/azmoon.app');
-var app_signup = require('./mongo/app.signup');
-//---------------------------------------------------------------
 app.get('/api/currentDate', (req, res) => {
-  let merchantCode = 4438263;
-  let terminalCode = 1615545;
-  let amount = 10000;
-  let redirectAddress = 'http://localhost:5001/api/verify';
-  let invoiceNumber = 1020;
-  let invoiceDate = '1397/02/30 12:43:21';
-  let action = 1003;
-  let timeStamp = dateFormat(new Date(), "yyyy/mm/dd, HH:mm:ss");
+  res.send(new Date());
+});
+//---------------------------------------------------------------
+var html_dir = './html/';
+app.engine('.html', require('ejs').__express);
+app.set('views', __dirname + '/html');
+app.set('view engine', 'html');
+app.use('/html', express.static(path.join(__dirname, 'html')));
+//---------------------------------------------------------------
+app.post('/api/verify', function (req, res) {
+  var url = 'https://verify.sep.ir/payments/referencepayment.asmx?WSDL';
+  var args = { String_1: req.body.RefNum, String_2: req.body.MID };
+  var args_reverse = { String_1: req.body.RefNum, String_2: req.body.MID, Password: '#Mehdi3385#', Amount: +req.body.Amount };
+  var user_data = {};
 
-  let data = "#" + merchantCode + "#" + terminalCode + "#" + invoiceNumber +
-    "#" + invoiceDate + "#" + amount + "#" + redirectAddress + "#" + action + "#" + timeStamp + "#";
-  //------------------------------------------------
-  const signer = crypto.createSign('SHA256');
-  signer.update(data);
-  let sign = signer.sign(RSA_PRIVATE_KEY, 'base64');
-  let t = {
-    'merchantCode': merchantCode,
-    'terminalCode': terminalCode,
-    'amount': amount,
-    'redirectAddress': redirectAddress,
-    'invoiceNumber': invoiceNumber,
-    'invoiceDate': invoiceDate,
-    'action': action,
-    'timeStamp': timeStamp,
-    'sign': sign
-  }
-  //------------------------------------------------
-  request.post({
-    "url": "https://pep.shaparak.ir/gateway.aspx",
-    "body": JSON.stringify(t)
-  }, (error, response, body) => {
-    if (error) {
-      //res.send(err);
-      console.log(error);
-    } else {
-      res.send(body)
-      //console.log(response);
-    }
+  soap.createClient(url, function (err, client) {
+    client.verifyTransaction(args, function (err, result) {
+      returnValue = result['result']['$value'];
+      if (+returnValue > 0) {
+        if (+returnValue == parseInt(req.body.Amount)) {
+          user_data = { msg_ok: 'تراکنش با موفقیت انجام گردید، در حال بازگشت به برنامه...', flag: true, RefNum: req.body.RefNum }
+        } else {
+          client.reverseTransaction(args_reverse, function (err, result) {
+            let reverseValue = result['result']['$value'];
+            if (+reverseValue == 1) {
+              user_data = { msg_ok: 'تراکنش به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, RefNum: req.body.RefNum };
+            }
+          })
+        }
+      } else {
+        user_data = { msg_ok: 'خرید انجام نگردید، در صورت کسر وجه مبلغ تا 72 ساعت دیگر به حساب شما برگشت داده می شود، در حال بازگشت به برنامه...', flag: false, RefNum: req.body.RefNum }
+      }
+    });
+    app.db.collection('azmoon_payment').insert(req.body, (err, data) => {
+      if (err) {
+        res.send(err);
+      } else {
+        var io = req.app.get('io');
+        io.on('connection', socket => {
+          socket.emit('data', JSON.stringify(user_data));
+        });
+        res.render('verify');
+      }
+    });
   });
 });
-app.get('/api/verify', (req, res) => {
-  console.log(res);
-})
 //---------------------------------------------------------------
 app.all('/api/azmoon_app/*', [middleware.verifyToken], (req, res, next) => {
   if (req.body.decode) {
@@ -98,15 +97,16 @@ app.all('/api/azmoon_app/*', [middleware.verifyToken], (req, res, next) => {
   }
 })
 //---------------------------------------------------------------
+var azmoon_base = require('./mongo/azmoon.base');
+var azmoon_exam = require('./mongo/azmoon.exam');
+var azmoon_login = require('./mongo/azmoon.login');
+var azmoon_app = require('./mongo/azmoon.app');
+var app_signup = require('./mongo/app.signup');
+
 app.use('/api/azmoon_base', azmoon_base);
 app.use('/api/azmoon_exam', azmoon_exam);
 app.use('/api/azmoon_login', azmoon_login);
 app.use('/api/azmoon_app', azmoon_app);
 app.use('/api/azmoon_app_signup', app_signup);
 //===============================================================
-const port = process.env.PORT || '5001';
-app.set('port', port);
-const server = http.createServer(app);
-server.listen(port, () => console.log(`API running on localhost:${port}`));
-
 
