@@ -54,11 +54,17 @@
         }
 
         .centered {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 999;
+        }
+
+        .item-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .cdk-overlay-backdrop {
@@ -81,36 +87,40 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6">
-                <input type="text" id="state" style="background-color:transparent;border:none;color:white;" readonly disabled>
-            </div>
+            <div class="col-6" id="state"></div>
             <div class="col-6">وضعیت تراکنش: </div>
         </div>
         <div class="row">
-            <div class="col-6" style="background-color:green;"></div>
+            <div class="col-6" id="stateCode"></div>
             <div class="col-6">وضعیت پرداخت: </div>
         </div>
         <div class="row">
-            <div class="col-6" style="background-color:green;"></div>
+            <div class="col-6" id="ResNum"></div>
             <div class="col-6">شناسه خرید: </div>
         </div>
         <div class="row">
-            <div class="col-6" style="background-color:green;"></div>
+            <div class="col-6" id="TraceNo"></div>
             <div class="col-6">شماره پیگیری: </div>
         </div>
         <div class="row">
-            <div class="col-6" style="background-color:green;"></div>
+            <div class="col-6" id="SecurePan"></div>
             <div class="col-6">شماره کارت خریدار: </div>
         </div>
+        <div class="row">
+            <div class="col-6"><input type="text" readonly disabled id="SelfOrBlank" style="background-color:transparent;border:none;color:white;font-family: 'IRANSans_FA_Nnumber' !important;"></div>
+            <div class="col-6">نحوه ارسال: </div>
+        </div>
+        
         <div class="row" style="background-color:white;">
-            <div class="col-12" style="text-align:center;font-weight:bold;color:black !important;">
-                <input type="button" onclick="window.location.href='http://localhost:8100/#/home'" value="Test">
-            </div>
+            <div class="col-12" style="text-align:center;font-weight:bold;color:black !important;"></div>
         </div>
     </div>
     <div id="loader" class="cdk-overlay-backdrop" style="width:100%;height:100%;min-width:100%;z-index:10001;">
         <div class="centered">
             <img src="/html/loading-2.svg" style="max-width:128px;">
+        </div>
+        <div class="item-center" style="position: absolute;top: 65%;left: 50%;transform: translate(-50%, -65%);z-index: 999;">
+            <div style="background-color:white;border-radius: 5px;color:black !important;text-align:justify;" id="importMessage"></div>
         </div>
     </div>
 </body>

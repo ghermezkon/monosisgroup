@@ -3,10 +3,10 @@ const
   http = require('http'),
   bodyParser = require('body-parser'),
   app = express(),
-  jwt = require('jsonwebtoken'),
   helmet = require('helmet'),
   compression = require('compression'),
   cors = require('cors'),
+  path = require('path'),
   mongoClient = require('mongodb').MongoClient,
   soap = require('soap');
 require('./mongo/middleware');
@@ -50,29 +50,28 @@ app.set('view engine', 'html');
 app.use('/html', express.static(path.join(__dirname, 'html')));
 //---------------------------------------------------------------
 app.post('/api/verify', function (req, res) {
-  var url = 'https://verify.sep.ir/payments/referencepayment.asmx?WSDL';
+  var url = 'https://sep.shaparak.ir/payments/referencepayment.asmx?WSDL';
   var args = { String_1: req.body.RefNum, String_2: req.body.MID };
   var args_reverse = { String_1: req.body.RefNum, String_2: req.body.MID, Password: '#Mehdi3385#', Amount: +req.body.Amount };
   var user_data = {};
-
   soap.createClient(url, function (err, client) {
     client.verifyTransaction(args, function (err, result) {
       returnValue = result['result']['$value'];
       if (+returnValue > 0) {
         if (+returnValue == parseInt(req.body.Amount)) {
-          user_data = { msg_ok: 'تراکنش با موفقیت انجام گردید، در حال بازگشت به برنامه...', flag: true, RefNum: req.body.RefNum }
+          user_data = { msg_ok: 'تراکنش با موفقیت انجام گردید، در حال بازگشت به برنامه ...', flag: true, body: req.body }
         } else {
           client.reverseTransaction(args_reverse, function (err, result) {
             let reverseValue = result['result']['$value'];
             if (+reverseValue == 1) {
-              user_data = { msg_ok: 'تراکنش به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, RefNum: req.body.RefNum };
+              user_data = { msg_ok: 'تراکنش به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, body: req.body };
             }
-          })
+          });
         }
       } else {
-        user_data = { msg_ok: 'خرید انجام نگردید، در صورت کسر وجه مبلغ تا 72 ساعت دیگر به حساب شما برگشت داده می شود، در حال بازگشت به برنامه...', flag: false, RefNum: req.body.RefNum }
+        user_data = { msg_ok: 'خرید انجام نگردید، در صورت کسر وجه مبلغ تا 72 ساعت دیگر به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, body: req.body }
       }
-    });
+    });    
     app.db.collection('azmoon_payment').insert(req.body, (err, data) => {
       if (err) {
         res.send(err);

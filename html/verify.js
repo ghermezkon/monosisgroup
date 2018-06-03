@@ -1,13 +1,21 @@
+var importData;
 $(document).ready(function () {
     var socket = io('http://monosisgroup.com');
+    //var socket = io('http://localhost:5001');
     socket.on('data', function (data) {
-        console.log(data);
-    });
+        importData = JSON.parse(data);
+        $('#state').text(importData.body.State);
+        $('#stateCode').text(importData.body.StateCode);
+        $('#ResNum').text(importData.body.RefNum);
+        $('#TraceNo').text(importData.body.TRACENO);
+        $('#SecurePan').text(importData.body.SecurePan);
+        $('#importMessage').text(importData.msg_ok);
+        $('#SelfOrBlank').val(importData.body.ResNum.substr(49, 1));
 
+        var SelfOrBlank = $('#SelfOrBlank').val();
+        if (SelfOrBlank == 's')
+            setInterval(function () { window.location.href = 'http://localhost:8100/#/home' }, 3000);
+        else window.close();
+    
+    });
 })
-$("body").ready(onBodyLoaded);
-//------------------------------------------------------
-function onBodyLoaded() {
-    console.log('Body');
-    //$('#loader').show();
-}

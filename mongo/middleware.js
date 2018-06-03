@@ -1,4 +1,6 @@
 Kavenegar = require('kavenegar');
+fs = require('fs');
+jwt = require('jsonwebtoken');
 const RSA_PRIVATE_KEY = fs.readFileSync('./security/monosisgroup-user.key');
 const RSA_PUBLIC_KEY = fs.readFileSync('./security/monosisgroup-user.crt');
 //----------------------------------------------
