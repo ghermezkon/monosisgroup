@@ -14,7 +14,6 @@ import { GlobalHttpService } from './http.service/global.http.service';
 export class AppComponent {
   isLoggedIn$: Observable<boolean>;
   isLoader$: Observable<boolean>;
-  resp: any;
   //------------------------------------------------------------------------------
   constructor(private router: Router, private auth: AuthService, private title: Title, private _loader: LoaderService, private _http: GlobalHttpService) {
     this.title.setTitle('گروه آموزشی مونوسیس');
@@ -24,11 +23,7 @@ export class AppComponent {
     this.isLoggedIn$ = this.auth.isLoggedIn;
     this.isLoader$ = this._loader.isLoader;
   }
-  test() {
-    this._http.payment().subscribe((res: any) => {
-      this.resp = res;
-    })
-  }
+
   onLogout() {
     this.auth.logout();
   }

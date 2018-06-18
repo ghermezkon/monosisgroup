@@ -8,7 +8,9 @@ const
   cors = require('cors'),
   path = require('path'),
   mongoClient = require('mongodb').MongoClient,
-  soap = require('soap');
+  soap = require('soap'),
+  crypto = require('crypto'),
+  request = require('request');
 require('./mongo/middleware');
 //------------------------------------------------------------------------------
 const port = process.env.PORT || '5001';
@@ -18,8 +20,8 @@ server.listen(port, () => console.log(`API running on localhost:${port}`));
 var io = require('socket.io').listen(server);
 app.set('io', io);
 //------------------------------------------------------------------------------
-const url = 'mongodb://localhost:27017';
-//const url = 'mongodb://172.18.200.11:27017';
+//const url = 'mongodb://localhost:27017';
+const url = 'mongodb://172.18.200.11:27017';
 const dbName = 'azmoon';
 //------------------------------------------------------------------------------
 app.use(function (req, res, next) {
@@ -71,7 +73,7 @@ app.post('/api/verify', function (req, res) {
       } else {
         user_data = { msg_ok: 'خرید انجام نگردید، در صورت کسر وجه مبلغ تا 72 ساعت دیگر به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, body: req.body }
       }
-    });    
+    });
     app.db.collection('azmoon_payment').insert(req.body, (err, data) => {
       if (err) {
         res.send(err);

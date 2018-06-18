@@ -7,7 +7,7 @@ require('./otp')
 require('./middleware')
 //--------------------------------------
 router
-    .get('/find_teacher_for_app/:study', (req, res) => {        
+    .get('/find_teacher_for_app/:study', (req, res) => {
         req.app.db.collection('azmoon_base').aggregate([
             {
                 $match: {
@@ -206,6 +206,14 @@ router
         ]).toArray((err, data) => {
             res.json(data);
         })
+    })
+    .get('/check_payment/:ResNum', (req, res) => {
+        req.app.db.collection('azmoon_payment').find({ $and: [{ 'State': 'OK' }, {' StateCode': 0 }, { 'ResNum': req.params.ResNum }] },
+            {
+                fields: { 'TRACENO': 1 }
+            }).toArray((err, data) => {
+                res.json(data);
+            })
     })
     //---------------------------------------
     .post('/result_exam', (req, res) => {

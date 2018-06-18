@@ -1,7 +1,7 @@
 var importData;
 $(document).ready(function () {
-    var socket = io('http://monosisgroup.com');
-    //var socket = io('http://localhost:5001');
+    //var socket = io('http://monosisgroup.com');
+    var socket = io('http://localhost:5001');
     socket.on('data', function (data) {
         importData = JSON.parse(data);
         $('#state').text(importData.body.State);
@@ -14,7 +14,7 @@ $(document).ready(function () {
 
         var SelfOrBlank = $('#SelfOrBlank').val();
         if (SelfOrBlank == 's')
-            setInterval(function () { window.location.href = 'http://localhost:8100/#/home' }, 3000);
+            setInterval(function () { window.location.href = 'http://localhost:8100/#/confirm-price' }, 4000);
         else window.close();
     
     });
