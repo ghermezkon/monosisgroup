@@ -15,7 +15,8 @@ $(document).ready(function () {
         var SelfOrBlank = $('#SelfOrBlank').val();
         if (SelfOrBlank == 's')
             setInterval(function () { window.location.href = 'http://localhost:8100/#/confirm-price' }, 4000);
-        else window.close();
-    
+        else window.close();        
+        socket.emit('disconnect'); socket.removeAllListeners();
+        socket.close();
     });
 })
