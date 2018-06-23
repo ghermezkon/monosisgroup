@@ -10,7 +10,8 @@ const
   mongoClient = require('mongodb').MongoClient,
   soap = require('soap'),
   crypto = require('crypto'),
-  request = require('request');
+  request = require('request'),
+  _objectId = require('mongodb').ObjectID,
 CryptoJS = require("crypto-js");
 require('./mongo/middleware');
 //------------------------------------------------------------------------------
@@ -118,8 +119,8 @@ app.post('/api/verify', function (req, res) {
     //     user_data = { msg_ok: 'خرید انجام نگردید، در صورت کسر وجه مبلغ تا 72 ساعت دیگر به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, body: req.body }
     //   }
     // });
-    req.body.student_id = req.body.ResNum.slice(25,49);
-    req.body.exam_id = req.body.ResNum.slice(0,24);
+    req.body.student_id = _objectId(req.body.ResNum.slice(25,49));
+    req.body.exam_id =  _objectId(req.body.ResNum.slice(0,24));
     req.body.kharid_number = req.body.ResNum.slice(0, 49);
     req.body.kharid_date = new Date();
 

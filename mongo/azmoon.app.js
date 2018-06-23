@@ -208,7 +208,6 @@ router
         })
     })
     .get('/check_payment/:kharid_number', (req, res) => {
-        console.log(req.params.kharid_number);
         req.app.db.collection('azmoon_payment').find({ $and: [{ 'State': 'OK' }, { 'StateCode': '0' }, { 'kharid_number': req.params.kharid_number }] },
             {
                 fields: { 'TRACENO': 1 }
@@ -221,6 +220,27 @@ router
             .count((err, data) => {
                 res.json(data);
             })
+    })
+    .get('/find_user_payment/:student_id', (req, res) => {
+        req.app.db.collection('azmoon_payment').aggregate([
+            { $match: { student_id: _objectId(req.params.student_id) } },
+            {
+                $lookup: {
+                    from: 'azmoon_exam',
+                    localField: 'exam_id',
+                    foreignField: '_id',
+                    as: 'exam_detail'
+                }
+            },
+            { $unwind: '$exam_detail' },
+            {
+                $project: {
+                    State: 1, StateCode: 1, TRACENO: 1, Amount: 1, kharid_date: 1, exam_name: '$exam_detail.exam_name', exam_teacher: '$exam_detail.exam_teacher'
+                }
+            }
+        ]).toArray((err, data) => {
+            res.json(data);
+        })
     })
     //---------------------------------------
     .post('/result_exam', (req, res) => {
@@ -236,7 +256,24 @@ router
             }
         });
     })
-    .post('/save_payment_for_teacher', (req, res)=>{
+    .put('/result_exam', (req, res) => {
+        req.body.exam_id = _objectId(req.body.exam_id)
+        req.body.student_id = _objectId(req.body.student_id)
+        req.body.user_exam_date = new Date();
+
+        req.app.db.collection('azmoon_app').update({ $and: [{ exam_id: req.body.exam_id }, { student_id: req.body.student_id }] }, req.body, (err, data) => {
+            if (err) {
+                res.send(err);
+            } else {
+                res.status(200).json(data);
+                res.end();
+            }
+        });
+    })
+    .post('/save_payment_for_teacher', (req, res) => {
+        req.body.exam_id = _objectId(req.body.exam_id)
+        req.body.student_id = _objectId(req.body.student_id)
+        
         req.app.db.collection('azmoon_payment_teacher').insertOne(req.body, (err, data) => {
             if (err) {
                 res.send(err);
