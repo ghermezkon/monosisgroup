@@ -215,12 +215,6 @@ router
                 res.json(data);
             })
     })
-    .get('/check_payment_for_teacher/:kharid_number/:teacher_code', (req, res) => {
-        req.app.db.collection('azmoon_payment_teacher').find({ $and: [{ 'kharid_number': req.params.kharid_number }, { 'teacher_code': req.params.teacher_code }] })
-            .count((err, data) => {
-                res.json(data);
-            })
-    })
     .get('/find_user_payment/:student_id', (req, res) => {
         req.app.db.collection('azmoon_payment').aggregate([
             { $match: { student_id: _objectId(req.params.student_id) } },
@@ -246,7 +240,9 @@ router
     .post('/result_exam', (req, res) => {
         req.body.exam_id = _objectId(req.body.exam_id)
         req.body.student_id = _objectId(req.body.student_id)
+        req.body.teacher_code = _objectId(req.body.teacher_code)
         req.body.user_exam_date = new Date();
+        req.body.checkout_date = null;
         req.app.db.collection('azmoon_app').insertOne(req.body, (err, data) => {
             if (err) {
                 res.send(err);
@@ -259,22 +255,10 @@ router
     .put('/result_exam', (req, res) => {
         req.body.exam_id = _objectId(req.body.exam_id)
         req.body.student_id = _objectId(req.body.student_id)
+        req.body.teacher_code = _objectId(req.body.teacher_code)
         req.body.user_exam_date = new Date();
-
+        req.body.checkout_date = null;
         req.app.db.collection('azmoon_app').update({ $and: [{ exam_id: req.body.exam_id }, { student_id: req.body.student_id }] }, req.body, (err, data) => {
-            if (err) {
-                res.send(err);
-            } else {
-                res.status(200).json(data);
-                res.end();
-            }
-        });
-    })
-    .post('/save_payment_for_teacher', (req, res) => {
-        req.body.exam_id = _objectId(req.body.exam_id)
-        req.body.student_id = _objectId(req.body.student_id)
-        
-        req.app.db.collection('azmoon_payment_teacher').insertOne(req.body, (err, data) => {
             if (err) {
                 res.send(err);
             } else {
@@ -308,6 +292,19 @@ router
             }
         });
 
-    });
+    })
+    .post('/save_rank_for_exam', (req, res) => {
+        req.body.exam_id = _objectId(req.body.exam_id)
+        req.body.student_id = _objectId(req.body.student_id)
+        req.body.teacher_code = _objectId(req.body.teacher_code)
+        req.app.db.collection('azmoon_rank').insertOne(req.body, (err, data) => {
+            if (err) {
+                res.send(err);
+            } else {
+                res.status(200).json(data);
+                res.end();
+            }
+        });
+    })
 //---------------------------------------
 module.exports = router

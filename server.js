@@ -12,7 +12,7 @@ const
   crypto = require('crypto'),
   request = require('request'),
   _objectId = require('mongodb').ObjectID,
-CryptoJS = require("crypto-js");
+  CryptoJS = require("crypto-js");
 require('./mongo/middleware');
 //------------------------------------------------------------------------------
 const port = process.env.PORT || '5001';
@@ -108,6 +108,8 @@ app.post('/api/verify', function (req, res) {
     //     if (+returnValue == parseInt(req.body.Amount)) {
     //       user_data = { msg_ok: 'تراکنش با موفقیت انجام گردید، در حال بازگشت به برنامه ...', flag: true, body: req.body }
     //     } else {
+    //       req.body.State = 'Error in Verification';
+    //       req.body.StateCode = -1;
     //       client.reverseTransaction(args_reverse, function (err, result) {
     //         let reverseValue = result['result']['$value'];
     //         if (+reverseValue == 1) {
@@ -116,11 +118,13 @@ app.post('/api/verify', function (req, res) {
     //       });
     //     }
     //   } else {
+    //     req.body.State = 'Error in Verification';
+    //     req.body.StateCode = -1;
     //     user_data = { msg_ok: 'خرید انجام نگردید، در صورت کسر وجه مبلغ تا 72 ساعت دیگر به حساب شما برگشت داده می شود، در حال بازگشت به برنامه ...', flag: false, body: req.body }
     //   }
     // });
-    req.body.student_id = _objectId(req.body.ResNum.slice(25,49));
-    req.body.exam_id =  _objectId(req.body.ResNum.slice(0,24));
+    req.body.student_id = _objectId(req.body.ResNum.slice(25, 49));
+    req.body.exam_id = _objectId(req.body.ResNum.slice(0, 24));
     req.body.kharid_number = req.body.ResNum.slice(0, 49);
     req.body.kharid_date = new Date();
 
@@ -137,7 +141,7 @@ app.post('/api/verify', function (req, res) {
             delete clients[socket.id];
             socket.removeAllListeners();
             socket.disconnect(true);
-          });          
+          });
         });
         res.render('verify');
       }
